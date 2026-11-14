@@ -49,6 +49,7 @@ function challenge(){
  document.querySelector('#reset').onclick=()=>{answers={};challenge();ensurePageHeading();main.querySelector('h1')?.focus()};
 }
 function render(){
+ stopTimeline();
  stopEditorial();
  document.querySelectorAll('dialog[open]').forEach(dialog=>dialog.close());
  const route=location.hash.slice(1)||'home';
@@ -56,7 +57,7 @@ function render(){
  else if(route==='atlas')main.replaceChildren();
  else if(route==='collection')collection();
  else if(route==='challenge')challenge();
- else if(route==='timeline')main.innerHTML=`<section>${intro(exhibits[0].year+' — '+exhibits.at(-1).year,'A history left on the surface.','Each date names its event: arrival, deployment year, or final flight. Open an event to inspect its NASA evidence.')}<div class="timeline">${exhibits.map(e=>`<a href="#exhibit/${e.id}"><b>${e.year}</b><span>${e.name}<small class="timeline-event">${e.dateLabel}</small></span><span>${e.world} · ${e.status} ↗</span></a>`).join('')}</div></section>`;
+ else if(route==='timeline')renderTimeline();
  else if(route==='sources')main.innerHTML=`<section>${intro('Research desk','Follow the evidence.','Exhibit text is an educational paraphrase of NASA records. Photographs are historical observations. Image captions identify orbital context and enhanced color where applicable.')} ${exhibits.map(e=>`<div class="source"><h3>${e.name}</h3><p>${e.evidence}</p>${missionFacts(e)}<p>${missionReferences(e)}</p><a href="${e.source}" target="_blank" rel="noopener">${e.sourceName} ↗</a><p class="caption">Image credit · ${e.credit}</p>${e.extra?`<a href="${e.extra}" target="_blank" rel="noopener">Supporting mission report ↗</a>`:''}</div>`).join('')}<div class="source"><h3>Challenge brief</h3><p>The 2026 official challenge title was found in the Space Apps index. The full official page returned an error during preparation. The detailed objectives were cross-checked against the published local-event reproduction.</p><a href="https://www.spaceappschallenge.org/2026/challenges/abandoned-but-not-forgotten-storytelling-about-nasas-discarded-equipment-on-the-moon-and-mars/">Official challenge ↗</a><p><a href="https://hackathlone.com/challenges/nasas-discarded-equipment-storytelling">Local-event reproduction ↗</a></p></div></section>`;
  else if(route==='about')main.innerHTML=`<section>${intro('About this museum','Built for curious explorers.','After the Mission connects real hardware on the Moon and Mars with the exploration it enabled. It is an independent educational project prepared for NASA Space Apps 2026.')}<h3>Continue building with ChatGPT</h3><p>Keep the entire project folder. Ask ChatGPT to edit the museum and attach the project ZIP in a new chat. Exhibit wording lives in exhibits.js, appearance in style.css, and interactions in app.js. Save a copy before editing, then refresh the browser to see changes.</p><h3>How to open it</h3><p>Extract the ZIP, open the website folder, and double-click index.html. Images and activities work locally. Internet access is needed only for external NASA links. The museum’s images and fonts work locally.</p><h3>Reading the collection</h3><p>Hardware has several different histories here. Some parts were deliberately released, some were parked after use, and some completed long scientific missions. Each exhibit records that distinction. This is a curated collection of ${exhibits.length} objects and systems.</p></section>`;
  else if(route!=='home')main.innerHTML='<section><h2>That destination is outside the collection.</h2><p>Choose an exhibit or return to the museum entrance.</p><a class="button primary" href="#home">Return home →</a></section>';
@@ -64,7 +65,7 @@ function render(){
  enhanceMuseum(); installDiscoveries(); installEditorial(); installAtlas(); installResearchDirectory(); installMissionStory();
  if(route!=='home')ensurePageHeading();
  main.tabIndex=-1;
- main.querySelectorAll('img').forEach(image=>{image.decoding='async';if(!image.closest('.cinema')&&!image.classList.contains('evidence'))image.loading='lazy';});
+ main.querySelectorAll('img').forEach(image=>{image.decoding='async';if(!image.closest('.cinema, .timeline-feature')&&!image.classList.contains('evidence'))image.loading='lazy';});
  document.querySelectorAll('nav a').forEach(link=>{if(link.hash==='#'+route || (route.startsWith('exhibit/') && link.hash==='#collection'))link.setAttribute('aria-current','page');else link.removeAttribute('aria-current')});
  window.updateMissionGuideContext?.();
  document.title='After the Mission — '+(route.startsWith('exhibit/')?(exhibits.find(e=>e.id===route.slice(8))?.name||'Exhibit'):route.charAt(0).toUpperCase()+route.slice(1));
@@ -84,7 +85,7 @@ function applyMuseumAction() {
     if(['Moon','Mars','All'].includes(action.world))filter=action.world;
     query='';collection();ensurePageHeading();
   } else if(action.tool==='moon') {
-    const globe=main.querySelector('.lunar-globe');globe?.scrollIntoView({behavior:motionPreference.matches?'instant':'smooth',block:'start'});globe?.querySelector('canvas')?.focus({preventScroll:true});
+    const globe=main.querySelector('.lunar-globe');globe?.scrollIntoView({behavior:motionPreference.matches?'instant':'smooth',block:'start'});if(action.site)globe?.querySelector(`[data-lunar-site="${action.site}"]`)?.click();globe?.querySelector('canvas')?.focus({preventScroll:true});
   } else if(action.tool==='terrain') {
     const lesson=main.querySelector('.terrain-lesson');if(lesson){lesson.open=true;lesson.scrollIntoView({behavior:motionPreference.matches?'instant':'smooth',block:'start'});lesson.querySelector('summary')?.focus({preventScroll:true});}
   } else if(action.tool==='atlas') {
@@ -92,6 +93,8 @@ function applyMuseumAction() {
   } else {
     const tab=main.querySelector(action.tool==='compare'?'#tab-compare':action.tool==='archive'?'#tab-archive':'#tab-lab');
     tab?.click();
+    if(action.tool==='science'&&action.experiment){const index=scienceExperiments.findIndex(story=>story.id===action.experiment);if(index>=0)main.querySelector(`[data-experiment="${index}"]`)?.click();}
+    if(action.tool==='compare'){for(const [selector,id] of [['#compare-first',action.first],['#compare-second',action.second]]){const select=main.querySelector(selector);if(select&&exhibits.some(record=>record.id===id))select.value=id;}main.querySelector('#compare-first')?.onchange();}
     const content=main.querySelector('#discovery-content');
     content?.scrollIntoView({behavior:motionPreference.matches?'instant':'smooth',block:'start'});
     tab?.focus({preventScroll:true});
@@ -100,8 +103,11 @@ function applyMuseumAction() {
 addEventListener('museum-action',event=>{
   const action=event.detail;
   if(!action||!['collection','atlas','compare','science','archive','terrain','moon'].includes(action.tool))return;
-  pendingMuseumAction={tool:action.tool,world:action.world};
+  pendingMuseumAction={tool:action.tool,world:action.world,site:typeof action.site==='string'&&moonSites.some(site=>site.id===action.site)?action.site:null,experiment:scienceExperiments.some(story=>story.id===action.experiment)?action.experiment:null,first:action.first,second:action.second};
   const route=action.tool==='collection'?'#collection':['atlas','terrain'].includes(action.tool)?'#atlas':'#home';
   if(location.hash===route || (!location.hash && route==='#home'))applyMuseumAction();
   else location.hash=route;
 });
+
+// One delegated handler survives route changes without accumulating listeners.
+addEventListener('click',event=>{const button=event.target.closest?.('[data-museum-tool]');if(!button)return;dispatchEvent(new CustomEvent('museum-action',{detail:{tool:button.dataset.museumTool,site:button.dataset.museumSite,experiment:button.dataset.museumExperiment,first:button.dataset.museumFirst,second:button.dataset.museumSecond}}));});

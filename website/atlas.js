@@ -10,7 +10,9 @@ const artifactContext = {
 
 Object.assign(artifactContext, {"surveyor":{"engineering":"A television camera observed the ground as a remotely commanded sampler dug and tested the soil.","ending":"Contact ended in May 1967. Most of the lander stayed on the Moon, while Apollo 12 recovered selected components in 1969.","legacy":"A bridge from robotic reconnaissance to human exploration, and a rare chance to examine hardware after exposure on another world."},"viking":{"engineering":"A robotic arm delivered soil to onboard experiments. Radioisotope generators supplied electrical power independently of sunlight.","ending":"A faulty command interrupted communications in November 1982. Attempts to regain contact did not succeed.","legacy":"Viking established a long record of surface observations and showed why searching for life requires multiple lines of evidence."},"pathfinder":{"engineering":"Airbags surrounded the lander during touchdown. Sojourner then drove away to investigate nearby rocks.","ending":"The final data transmission arrived in September 1997. The lander and rover remain on Mars.","legacy":"A technology demonstration became a scientific field trip and helped establish mobile exploration as a practical tool."},"insight":{"engineering":"A robotic arm deployed a seismometer and heat-flow probe. The mission studied the planet’s interior through several complementary investigations; not every instrument met its original goal.","ending":"Dust accumulation reduced solar power and the mission ended in 2022. The lander remains at its landing site.","legacy":"Measurements from a single stationary explorer opened a new way to investigate the deep interior of Mars."}});
 
+let stopAtlasGlobe=()=>{};
 function installAtlas() {
+  stopAtlasGlobe();
   const route = location.hash.slice(1) || 'home';
   if (route.startsWith('exhibit/')) {
     const record = exhibits.find(e => e.id === route.slice(8));
@@ -37,11 +39,13 @@ function installAtlas() {
   section.innerHTML=`<div class="atlas-heading"><div><div class="eyebrow">The surface archive / 01</div><h2>Far away.<br>Still part of our story.</h2><p>Choose a world, then select an artifact. Discover why a machine’s final resting place can be the beginning of another story.</p></div><div class="world-switch" role="group" aria-label="Choose a world"><button data-world="Moon" aria-pressed="true">01 / Moon</button><button data-world="Mars" aria-pressed="false">02 / Mars</button></div></div><div class="atlas-layout"><div class="planet-stage" data-planet="Moon"><div class="planet-grid" aria-hidden="true"></div><div class="planet-label" aria-hidden="true">SURFACE ARCHIVE</div><div class="artifact-pins" role="group" aria-label="Artifacts on the selected world"></div><p class="map-caption">Illustrated navigation · Sites arranged for readability, not geographic position</p></div><article class="atlas-detail" aria-live="polite"></article></div><div class="atlas-guide"><span>01 Choose a world</span><span>02 Select an artifact</span><span>03 Read its evidence</span></div><div class="panel"><h3>“Left behind” doesn’t always mean the same thing.</h3><p>A heat shield separates by design. A rover parks after its work is done. A scientific station can keep measuring long after people leave. A damaged aircraft can end its travels unexpectedly. These objects tell different stories, and their status matters.</p><a class="button" href="#challenge">Test your space detective skills →</a></div>`;
   if (route==='atlas') { main.replaceChildren(section); document.title='Surface explorer — After the Mission'; }
   else main.querySelector('.cinema').after(section);
+  const globeCredit=document.createElement('p');globeCredit.className='atlas-globe-source caption';section.querySelector('.atlas-layout').after(globeCredit);
   function select(record) {
     section.querySelectorAll('[data-pin]').forEach(button=>button.setAttribute('aria-pressed',String(button.dataset.pin===record.id)));
     section.querySelector('.atlas-detail').innerHTML=`${museumImage(record)}<div class="atlas-detail-copy"><div class="eyebrow">${record.world} / ${record.year}</div><h3>${record.name}</h3><p>${record.hook}</p><dl><dt>Site</dt><dd>${record.place}</dd><dt>Hardware status</dt><dd>${record.status}</dd><dt>${record.dateLabel}</dt><dd>${record.date}</dd></dl><a class="button primary" href="#exhibit/${record.id}">Discover the full story ↗</a><p class="caption">Image · ${record.credit}</p></div>`;
   }
   function world(name) {
+    stopAtlasGlobe();
     const records=exhibits.filter(e=>e.world===name);
     section.querySelector('.planet-stage').dataset.planet=name;
     section.querySelectorAll('[data-world]').forEach(button=>button.setAttribute('aria-pressed',String(button.dataset.world===name)));
@@ -50,6 +54,8 @@ function installAtlas() {
     pins.querySelectorAll('button').forEach(button=>button.onclick=()=>select(records.find(record=>record.id===button.dataset.pin)));
     pins.onkeydown=event=>{if(!['ArrowDown','ArrowUp','Home','End'].includes(event.key))return;const buttons=[...pins.querySelectorAll('button')];const index=buttons.indexOf(document.activeElement);if(index<0)return;event.preventDefault();const next=event.key==='Home'?0:event.key==='End'?buttons.length-1:(index+(event.key==='ArrowDown'?1:buttons.length-1))%buttons.length;buttons[next].focus();buttons[next].click();};
     select(records[0]);
+    globeCredit.innerHTML=name==='Mars'?'Globe texture · NASA/JPL-Caltech · Viking images processed at USGS · <a href="https://science.nasa.gov/3d-resources/mars/" target="_blank" rel="noopener">NASA texture record ↗</a>. Decorative rotation; not live lighting or a real-time view.':'Globe texture · NASA/GSFC/Arizona State University · <a href="https://svs.gsfc.nasa.gov/4720/" target="_blank" rel="noopener">NASA CGI Moon Kit ↗</a>. Decorative rotation; not live lighting or a real-time view.';
+    stopAtlasGlobe=mountAtlasGlobe(section.querySelector('.planet-stage'),name);
   }
   section.querySelectorAll('[data-world]').forEach(button=>button.onclick=()=>world(button.dataset.world));
   world('Moon');
