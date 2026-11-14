@@ -18,7 +18,7 @@ function installAtlas() {
     const context = artifactContext[record.id];
     const section = document.createElement('div');
     section.className = 'interpretation';
-    section.innerHTML = `<div class="eyebrow">From engineering to legacy</div><h3>Why this object matters</h3>${[['How it worked',context.engineering],['Why it stayed',context.ending],['What it left us',context.legacy]].map(([title,text])=>`<details open><summary>${title}</summary><p>${text}</p></details>`).join('')}<p class="caption">${missionReferences(record)}</p>${context.source?`<p class="caption"><a href="${context.source}" target="_blank" rel="noopener">Supporting NASA mission record ↗</a></p>`:''}`;
+    section.innerHTML = `<div class="eyebrow">From engineering to legacy</div><h3>Why this object matters</h3>${record.finalOutcome?`<p class="caption"><a href="${record.finalOutcome.source}" target="_blank" rel="noopener">Final-outcome evidence ↗</a></p>`:''}${[['How it worked',context.engineering],['Its final chapter',record.finalOutcome?.text||context.ending],['What it left us',context.legacy]].map(([title,text])=>`<details open><summary>${title}</summary><p>${text}</p></details>`).join('')}<p class="caption">${missionReferences(record)}</p>${context.source?`<p class="caption"><a href="${context.source}" target="_blank" rel="noopener">Supporting NASA mission record ↗</a></p>`:''}`;
     if(record.id==='alsep') section.insertAdjacentHTML('beforeend','<h3>A connection across worlds</h3><p>Lunar seismic experiments and Mars’s InSight mission share a question: what can vibrations reveal about a planet’s interior? Explore how a later mission carried that kind of investigation to Mars.</p><a class="button" href="https://science.nasa.gov/mission/insight/" target="_blank" rel="noopener">Meet InSight at NASA ↗</a>');
     main.querySelector('.split').after(section);
     return;
@@ -39,7 +39,7 @@ function installAtlas() {
   else main.querySelector('.cinema').after(section);
   function select(record) {
     section.querySelectorAll('[data-pin]').forEach(button=>button.setAttribute('aria-pressed',String(button.dataset.pin===record.id)));
-    section.querySelector('.atlas-detail').innerHTML=`<img src="images/${record.image || record.id}.jpg" alt="${record.image ? record.evidence : record.name+' — NASA archival image'}" loading="lazy" width="640" height="360"><div class="atlas-detail-copy"><div class="eyebrow">${record.world} / ${record.year}</div><h3>${record.name}</h3><p>${record.hook}</p><dl><dt>Site</dt><dd>${record.place}</dd><dt>Hardware status</dt><dd>${record.status}</dd><dt>${record.dateLabel}</dt><dd>${record.date}</dd></dl><a class="button primary" href="#exhibit/${record.id}">Discover the full story ↗</a><p class="caption">Image · ${record.credit}</p></div>`;
+    section.querySelector('.atlas-detail').innerHTML=`${museumImage(record)}<div class="atlas-detail-copy"><div class="eyebrow">${record.world} / ${record.year}</div><h3>${record.name}</h3><p>${record.hook}</p><dl><dt>Site</dt><dd>${record.place}</dd><dt>Hardware status</dt><dd>${record.status}</dd><dt>${record.dateLabel}</dt><dd>${record.date}</dd></dl><a class="button primary" href="#exhibit/${record.id}">Discover the full story ↗</a><p class="caption">Image · ${record.credit}</p></div>`;
   }
   function world(name) {
     const records=exhibits.filter(e=>e.world===name);
@@ -48,6 +48,7 @@ function installAtlas() {
     const pins=section.querySelector('.artifact-pins');
     pins.innerHTML=records.map((record,i)=>`<button data-pin="${record.id}" style="--pin:${i}" aria-pressed="${i===0}"><span aria-hidden="true">0${i+1}</span>${record.name}<small>${record.place}</small></button>`).join('');
     pins.querySelectorAll('button').forEach(button=>button.onclick=()=>select(records.find(record=>record.id===button.dataset.pin)));
+    pins.onkeydown=event=>{if(!['ArrowDown','ArrowUp','Home','End'].includes(event.key))return;const buttons=[...pins.querySelectorAll('button')];const index=buttons.indexOf(document.activeElement);if(index<0)return;event.preventDefault();const next=event.key==='Home'?0:event.key==='End'?buttons.length-1:(index+(event.key==='ArrowDown'?1:buttons.length-1))%buttons.length;buttons[next].focus();buttons[next].click();};
     select(records[0]);
   }
   section.querySelectorAll('[data-world]').forEach(button=>button.onclick=()=>world(button.dataset.world));

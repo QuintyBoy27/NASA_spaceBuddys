@@ -20,13 +20,14 @@ function installEditorial() {
   const opening = document.createElement('section');
   opening.className = 'cinema';
   opening.setAttribute('aria-label','Featured museum stories');
-  opening.innerHTML = `<div class="cinema-images" aria-hidden="true">${scenes.map((s,i)=>`<img src="images/${s.id}.jpg" class="${i===0?'active':''}" alt="" ${i===0?'fetchpriority="high"':'loading="lazy"'}>`).join('')}</div><div class="cinema-shade"></div><div class="cinema-copy"><p class="eyebrow" id="scene-tag"></p><h1><span id="scene-title"></span><em id="scene-emphasis"></em></h1><p id="scene-description"></p><a class="button primary" id="scene-link">Explore the story ↗</a></div><div class="cinema-bottom"><div class="scene-tabs" aria-label="Choose a featured story">${scenes.map((s,i)=>`<button data-scene="${i}" aria-pressed="${i===0}">${exhibits.find(e=>e.id===s.id).name}</button>`).join('')}</div><button id="scene-play" aria-pressed="false">Play stories ▷</button></div><span class="cinema-credit"></span>`;
+  opening.innerHTML = `<div class="cinema-images" aria-hidden="true">${scenes.map((s,i)=>`<img ${i===0?`src="images/${s.id}.jpg" fetchpriority="high"`:`data-src="images/${s.id}.jpg"`} class="${i===0?'active':''}" alt="" decoding="async">`).join('')}</div><div class="cinema-shade"></div><div class="cinema-copy"><p class="eyebrow" id="scene-tag"></p><h1><span id="scene-title"></span><em id="scene-emphasis"></em></h1><p id="scene-description"></p><a class="button primary" id="scene-link">Explore the story ↗</a></div><div class="cinema-bottom"><div class="scene-tabs" aria-label="Choose a featured story">${scenes.map((s,i)=>`<button data-scene="${i}" aria-pressed="${i===0}">${exhibits.find(e=>e.id===s.id).name}</button>`).join('')}</div><button id="scene-play" aria-pressed="false">Play stories ▷</button></div><span class="cinema-credit"></span>`;
   moonSection.before(opening);
   let current = 0;
   let timer;
   let playing = false;
   let visible = true;
   let copyAnimation;
+  let focusTimer;
   function selectScene(index) {
     current = index;
     const scene = scenes[index];
@@ -37,10 +38,10 @@ function installEditorial() {
     opening.querySelector('#scene-description').textContent = scene.text;
     opening.querySelector('#scene-link').href = '#exhibit/' + scene.id;
     opening.querySelector('.cinema-credit').textContent = 'Archival image · ' + record.credit;
-    opening.querySelectorAll('.cinema-images img').forEach((image,i)=>image.classList.toggle('active',i===index));
+    opening.querySelectorAll('.cinema-images img').forEach((image,i)=>{if(i===index && !image.getAttribute('src'))image.src=image.dataset.src;image.classList.toggle('active',i===index)});
     opening.querySelectorAll('[data-scene]').forEach((button,i)=>button.setAttribute('aria-pressed',String(i===index)));
     copyAnimation?.cancel();
-    if (!motionPreference.matches) copyAnimation=opening.querySelector('.cinema-copy').animate([{opacity:.2,transform:'translateY(12px)'},{opacity:1,transform:'translateY(0)'}],{duration:550,easing:'ease-out'});
+    if (!motionPreference.matches && opening.querySelector('.cinema-copy').animate) copyAnimation=opening.querySelector('.cinema-copy').animate([{opacity:.2,transform:'translateY(12px)'},{opacity:1,transform:'translateY(0)'}],{duration:550,easing:'ease-out'});
   }
   function schedule() {
     clearInterval(timer);
@@ -55,11 +56,11 @@ function installEditorial() {
   opening.querySelectorAll('[data-scene]').forEach(button=>button.onclick=()=>{setPlaying(false);selectScene(Number(button.dataset.scene));});
   opening.querySelector('#scene-play').onclick=()=>setPlaying(!playing);
   opening.addEventListener('focusin',()=>clearInterval(timer));
-  opening.addEventListener('focusout',()=>setTimeout(schedule,0));
+  opening.addEventListener('focusout',()=>{clearTimeout(focusTimer);focusTimer=setTimeout(schedule,0)});
   document.addEventListener('visibilitychange',schedule);
-  const observer = new IntersectionObserver(entries=>{visible=entries[0].isIntersecting;schedule();});
-  observer.observe(opening);
-  stopEditorial=()=>{playing=false;copyAnimation?.cancel();clearInterval(timer);observer.disconnect();document.removeEventListener('visibilitychange',schedule);};
+  const observer = 'IntersectionObserver' in window ? new IntersectionObserver(entries=>{visible=entries[0].isIntersecting;schedule();}) : null;
+  observer?.observe(opening);
+  stopEditorial=()=>{playing=false;clearTimeout(focusTimer);copyAnimation?.cancel();clearInterval(timer);observer?.disconnect();document.removeEventListener('visibilitychange',schedule);};
   selectScene(0);
   installSpotlight(moonSection);
   // The archive already presents every artifact; omit the repeated card gallery.
@@ -69,14 +70,15 @@ function installEditorial() {
 function installSpotlight(after) {
   const gallery=document.createElement('section');
   gallery.className='spotlight-section';
-  gallery.innerHTML=`<div class="editorial-heading"><div class="eyebrow">Inside the collection</div><h2>${exhibits.length} objects.<br><em>Extraordinary journeys.</em></h2><p>Choose an artifact to bring its story into focus.</p></div><div class="spotlight"><div id="spotlight-preview"></div><div class="spotlight-list" aria-label="Artifact previews">${exhibits.map((e,i)=>`<button data-artifact="${i}" aria-pressed="${i===0}"><span>${e.name}</span><small>${e.world} · ${e.year}</small><b aria-hidden="true">↗</b></button>`).join('')}</div></div><div class="archive-header"><h3>Through the archive</h3><div><button id="archive-prev" aria-label="Previous archive images">←</button><button id="archive-next" aria-label="Next archive images">→</button></div></div><div class="archive-rail" tabindex="0" aria-label="Scrollable NASA image gallery">${exhibits.map(e=>`<a href="#exhibit/${e.id}"><img src="images/${e.image || e.id}.jpg" alt="${e.image ? e.evidence : e.name+', NASA archive'}" loading="lazy"><span>${e.name} ↗</span></a>`).join('')}</div><p class="caption">NASA archival imagery · Individual image credits and scientific sources in each exhibit.</p>`;
+  gallery.innerHTML=`<div class="editorial-heading"><div class="eyebrow">Inside the collection</div><h2>${exhibits.length} objects.<br><em>Extraordinary journeys.</em></h2><p>Choose an artifact to bring its story into focus.</p></div><div class="spotlight"><div id="spotlight-preview"></div><div class="spotlight-list" aria-label="Artifact previews">${exhibits.map((e,i)=>`<button data-artifact="${i}" aria-pressed="${i===0}"><span>${e.name}</span><small>${e.world} · ${e.year}</small><b aria-hidden="true">↗</b></button>`).join('')}</div></div><div class="archive-header"><h3>Through the archive</h3><div><button id="archive-prev" aria-label="Previous archive images">←</button><button id="archive-next" aria-label="Next archive images">→</button></div></div><div class="archive-rail" tabindex="0" aria-label="Scrollable NASA image gallery">${exhibits.map(e=>`<a href="#exhibit/${e.id}">${museumImage(e)}<span>${e.name} ↗</span></a>`).join('')}</div><p class="caption">NASA archival imagery · Individual image credits and scientific sources in each exhibit.</p>`;
   after.after(gallery);
   function select(index) {
     const e=exhibits[index];
     const preview=gallery.querySelector('#spotlight-preview');
-    preview.innerHTML=`<img src="images/${e.image || e.id}.jpg" alt="${e.image ? e.evidence : e.name+', NASA archive'}"><div><p class="eyebrow">${e.mission}</p><h3>${e.hook}</h3><p>${e.status} · ${e.place}</p><a class="button" href="#exhibit/${e.id}">Enter the exhibit →</a></div>`;
+    preview.innerHTML=`${museumImage(e)}<div><p class="eyebrow">${e.mission}</p><h3>${e.hook}</h3><p>${e.status} · ${e.place}</p><a class="button" href="#exhibit/${e.id}">Enter the exhibit →</a></div>`;
     gallery.querySelectorAll('[data-artifact]').forEach((button,i)=>button.setAttribute('aria-pressed',String(i===index)));
-    if(!motionPreference.matches) preview.animate([{opacity:.35},{opacity:1}],{duration:400});
+    preview.getAnimations?.().forEach(animation=>animation.cancel());
+    if(!motionPreference.matches && preview.animate) preview.animate([{opacity:.35},{opacity:1}],{duration:400});
   }
   gallery.querySelectorAll('[data-artifact]').forEach(button=>button.onclick=()=>select(Number(button.dataset.artifact)));
   const rail=gallery.querySelector('.archive-rail');

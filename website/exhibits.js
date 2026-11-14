@@ -399,6 +399,853 @@ exhibits.push(...[
     "researched": "2026-11-14"
   }
 ]);
+// Shared research used by exhibits, diagrams and the built-in guide.
+const missionResearch = {
+  "surveyor": {
+    "aliases": [
+      "surveyor iii",
+      "robotic lunar lander"
+    ],
+    "events": [
+      {
+        "date": "1967-04-17",
+        "label": "Launch",
+        "detail": "Surveyor 3 departed Earth.",
+        "source": "https://science.nasa.gov/mission/surveyor-3/"
+      },
+      {
+        "date": "1967-04-20",
+        "label": "Landing",
+        "detail": "It settled in Oceanus Procellarum.",
+        "source": "https://science.nasa.gov/mission/surveyor-3/"
+      },
+      {
+        "date": "1967-05-04",
+        "label": "Last contact",
+        "detail": "Contact ended after lunar night began.",
+        "source": "https://science.nasa.gov/mission/surveyor-3/"
+      },
+      {
+        "date": "1969-11",
+        "label": "Human revisit",
+        "detail": "Apollo 12 recovered selected components.",
+        "source": "https://science.nasa.gov/mission/surveyor-3/"
+      }
+    ],
+    "instruments": [
+      {
+        "name": "Surface sampler",
+        "purpose": "Dug trenches and tested soil strength.",
+        "source": "https://science.nasa.gov/mission/surveyor-3/"
+      },
+      {
+        "name": "TV camera",
+        "purpose": "Recorded the sampling site and surroundings.",
+        "source": "https://science.nasa.gov/mission/surveyor-3/"
+      }
+    ],
+    "related": [
+      "eagle",
+      "rover"
+    ],
+    "discovery": {
+      "text": "Soil tests supported the feasibility of landing Apollo on the lunar surface.",
+      "source": "https://science.nasa.gov/mission/surveyor-3/"
+    },
+    "finalOutcome": {
+      "text": "Most of the lander remains; Apollo 12 returned its scoop, camera and other selected parts for study.",
+      "source": "https://science.nasa.gov/mission/surveyor-3/"
+    },
+    "imageMeta": {
+      "source": "https://science.nasa.gov/mission/surveyor-3/",
+      "type": "Surface photograph",
+      "alt": "Apollo 12 astronaut beside Surveyor 3, with the lunar module in the distance.",
+      "width": 1280,
+      "height": 1280,
+      "original": "https://assets.science.nasa.gov/content/dam/science/psd/solar/2023/07/as12-48-7134_1280.jpg"
+    },
+    "image": "surveyor",
+    "evidence": "Apollo 12 photograph AS12-48-7134 shows an astronaut examining Surveyor 3, with the Apollo lunar module in the background.",
+    "credit": "NASA",
+    "researched": "2026-11-14",
+    "glossary": [
+      {
+        "term": "Regolith",
+        "definition": "Loose fragments of rock and dust covering a solid surface.",
+        "source": "https://science.nasa.gov/moon/facts/"
+      }
+    ]
+  },
+  "eagle": {
+    "aliases": [
+      "apollo 11",
+      "armstrong",
+      "aldrin",
+      "tranquility base"
+    ],
+    "events": [
+      {
+        "date": "1969-07-16",
+        "label": "Launch",
+        "detail": "Apollo 11 began its journey.",
+        "source": "https://nssdc.gsfc.nasa.gov/nmc/spacecraft/display.action?id=1969-059C"
+      },
+      {
+        "date": "1969-07-20",
+        "label": "Lunar landing",
+        "detail": "Eagle landed with Armstrong and Aldrin.",
+        "source": "https://nssdc.gsfc.nasa.gov/nmc/spacecraft/display.action?id=1969-059C"
+      },
+      {
+        "date": "1969-07-21",
+        "label": "Surface departure",
+        "detail": "The ascent stage lifted off; the descent stage stayed.",
+        "source": "https://nssdc.gsfc.nasa.gov/nmc/spacecraft/display.action?id=1969-059C"
+      }
+    ],
+    "instruments": [
+      {
+        "name": "Descent propulsion and landing legs",
+        "purpose": "Slowed and supported the lunar landing; these are engineering systems, not science instruments.",
+        "source": "https://nssdc.gsfc.nasa.gov/nmc/spacecraft/display.action?id=1969-059C"
+      }
+    ],
+    "related": [
+      "surveyor",
+      "rover",
+      "alsep"
+    ],
+    "discovery": {
+      "text": "Returned samples brought the Moon into laboratories on Earth.",
+      "source": "https://science.nasa.gov/resource/apollo-11-landing-site-from-dawn-to-dusk/"
+    },
+    "finalOutcome": {
+      "text": "The lower stage was deliberately retained as the ascent stage’s launch platform.",
+      "source": "https://nssdc.gsfc.nasa.gov/nmc/spacecraft/display.action?id=1969-059C"
+    },
+    "imageMeta": {
+      "source": "https://science.nasa.gov/resource/apollo-11-landing-site/",
+      "type": "Annotated orbital photograph",
+      "alt": "Decades later, Lunar Reconnaissance Orbiter images show the descent stage and trails left by the crew.",
+      "width": 1000,
+      "height": 562
+    },
+    "researched": "2026-11-14",
+    "glossary": [
+      {
+        "term": "Regolith",
+        "definition": "Loose fragments of rock and dust covering a solid surface.",
+        "source": "https://science.nasa.gov/moon/facts/"
+      }
+    ],
+    "references": [
+      {
+        "title": "Apollo 11 landing site from dawn to dusk",
+        "url": "https://science.nasa.gov/resource/apollo-11-landing-site-from-dawn-to-dusk/"
+      },
+      {
+        "title": "NSSDCA · Apollo 11 Lunar Module / EASEP",
+        "url": "https://nssdc.gsfc.nasa.gov/nmc/spacecraft/display.action?id=1969-059C"
+      }
+    ]
+  },
+  "rover": {
+    "aliases": [
+      "lrv",
+      "moon buggy",
+      "apollo 15",
+      "lunar vehicle"
+    ],
+    "events": [
+      {
+        "date": "1971-07-26",
+        "label": "Launch",
+        "detail": "Apollo 15 carried the folded rover.",
+        "source": "https://nssdc.gsfc.nasa.gov/nmc/spacecraft/display.action?id=1971-063C"
+      },
+      {
+        "date": "1971-07-30",
+        "label": "Surface arrival",
+        "detail": "The lunar module delivered it to Hadley–Apennine.",
+        "source": "https://nssdc.gsfc.nasa.gov/nmc/spacecraft/display.action?id=1971-063C"
+      },
+      {
+        "date": "1971",
+        "label": "Surface traverses",
+        "detail": "The crew drove 27.8 km in total.",
+        "source": "https://nssdc.gsfc.nasa.gov/planetary/lunar/apollo_lrv.html"
+      },
+      {
+        "date": "1971-08-02",
+        "label": "Crew departure",
+        "detail": "The rover stayed on the surface when the crew left.",
+        "source": "https://www.nasa.gov/missions/apollo/apollo-15-mission-details/"
+      }
+    ],
+    "instruments": [
+      {
+        "name": "Navigation gyro and odometer",
+        "purpose": "Tracked direction and distance to help the crew return to the lander.",
+        "source": "https://nssdc.gsfc.nasa.gov/planetary/lunar/apollo_lrv.html"
+      },
+      {
+        "name": "Four electric wheel drives",
+        "purpose": "Independent motors moved the rover over the surface.",
+        "source": "https://nssdc.gsfc.nasa.gov/planetary/lunar/apollo_lrv.html"
+      }
+    ],
+    "related": [
+      "eagle",
+      "pathfinder"
+    ],
+    "discovery": {
+      "text": "Mobility increased the reach of geological fieldwork and sample collection.",
+      "source": "https://nssdc.gsfc.nasa.gov/planetary/lunar/apollo_lrv.html"
+    },
+    "finalOutcome": {
+      "text": "The rover was left on the Moon; it was designed for surface use, not return flight.",
+      "source": "https://nssdc.gsfc.nasa.gov/planetary/lunar/apollo_lrv.html"
+    },
+    "imageMeta": {
+      "source": "https://www.nasa.gov/wp-content/uploads/2023/04/sp-4029.pdf",
+      "type": "Orbital context image",
+      "alt": "Orbital context image of the Apollo 15 landing region and traverse routes. The rover is too small to identify in this overview; this is not a close-up photograph of the vehicle.",
+      "width": 952,
+      "height": 952
+    },
+    "researched": "2026-11-14",
+    "glossary": [
+      {
+        "term": "Regolith",
+        "definition": "Loose fragments of rock and dust covering a solid surface.",
+        "source": "https://science.nasa.gov/moon/facts/"
+      }
+    ],
+    "references": [
+      {
+        "title": "NSSDCA · Lunar Roving Vehicle",
+        "url": "https://nssdc.gsfc.nasa.gov/planetary/lunar/apollo_lrv.html"
+      },
+      {
+        "title": "NSSDCA · Apollo 15 Lunar Module / ALSEP",
+        "url": "https://nssdc.gsfc.nasa.gov/nmc/spacecraft/display.action?id=1971-063C"
+      }
+    ]
+  },
+  "alsep": {
+    "aliases": [
+      "apollo 17",
+      "experiments",
+      "lunar station"
+    ],
+    "events": [
+      {
+        "date": "1972-12-07",
+        "label": "Launch",
+        "detail": "Apollo 17 departed Earth.",
+        "source": "https://www.nasa.gov/missions/apollo/apollo-17-mission-details/"
+      },
+      {
+        "date": "1972-12-12",
+        "label": "Deployment",
+        "detail": "The crew installed the experiment station.",
+        "source": "https://www.nasa.gov/wp-content/uploads/static/history/SP-4029/Apollo_17i_Timeline.htm"
+      },
+      {
+        "date": "1977-09-30",
+        "label": "Commanded off",
+        "detail": "The surviving ALSEP network was shut down.",
+        "source": "https://www.nasa.gov/wp-content/uploads/static/history/SP-4029/Apollo_18-31_ALSEP_Arrays_and_Status.htm"
+      }
+    ],
+    "instruments": [
+      {
+        "name": "Heat-flow experiment",
+        "purpose": "Investigated heat escaping from the lunar interior.",
+        "source": "https://www.nasa.gov/missions/apollo/apollo-17-mission-details/"
+      },
+      {
+        "name": "Lunar seismic profiling",
+        "purpose": "Studied subsurface structure using ground vibrations.",
+        "source": "https://www.nasa.gov/missions/apollo/apollo-17-mission-details/"
+      }
+    ],
+    "related": [
+      "insight",
+      "eagle"
+    ],
+    "discovery": {
+      "text": "The station continued scientific work years after the crew had returned.",
+      "source": "https://www.nasa.gov/wp-content/uploads/static/history/SP-4029/Apollo_18-31_ALSEP_Arrays_and_Status.htm"
+    },
+    "finalOutcome": {
+      "text": "The station was commanded off on 30 September 1977; its hardware remains.",
+      "source": "https://www.nasa.gov/wp-content/uploads/static/history/SP-4029/Apollo_18-31_ALSEP_Arrays_and_Status.htm"
+    },
+    "imageMeta": {
+      "source": "https://science.nasa.gov/image-article/apod-2011-september-8-apollo-17-site-a-sharper-view/",
+      "type": "Annotated orbital photograph",
+      "alt": "The station was switched off in 1977. NASA’s annotated orbital image marks the experiment package near the landing site.",
+      "width": 1280,
+      "height": 960
+    },
+    "researched": "2026-11-14",
+    "date": "1972-12-12",
+    "dateLabel": "Experiment deployment",
+    "facts": [
+      [
+        "Deployment",
+        "12 December 1972"
+      ],
+      [
+        "Commanded off",
+        "30 September 1977"
+      ],
+      [
+        "Measurements",
+        "Heat flow & seismic profiling"
+      ]
+    ],
+    "glossary": [
+      {
+        "term": "Seismometer",
+        "definition": "An instrument that measures tiny motions of the ground. Scientists use the resulting waves to investigate a planet’s interior.",
+        "source": "https://science.nasa.gov/mission/insight/science-instruments/"
+      }
+    ]
+  },
+  "viking": {
+    "aliases": [
+      "viking 1",
+      "viking i",
+      "first mars lander"
+    ],
+    "events": [
+      {
+        "date": "1975-08-20",
+        "label": "Launch",
+        "detail": "An orbiter and lander departed together.",
+        "source": "https://science.nasa.gov/mission/viking-1/"
+      },
+      {
+        "date": "1976-07-20",
+        "label": "Landing",
+        "detail": "The lander reached Chryse Planitia.",
+        "source": "https://science.nasa.gov/mission/viking-1/"
+      },
+      {
+        "date": "1982-11-11",
+        "label": "Communications ended",
+        "detail": "A faulty command interrupted contact.",
+        "source": "https://science.nasa.gov/mission/viking-1/"
+      }
+    ],
+    "instruments": [
+      {
+        "name": "Biological laboratory",
+        "purpose": "Tested soil responses; its results did not establish Martian life.",
+        "source": "https://science.nasa.gov/mission/viking-1/"
+      },
+      {
+        "name": "Weather instruments",
+        "purpose": "Measured temperature, pressure and wind.",
+        "source": "https://science.nasa.gov/mission/viking-1/"
+      },
+      {
+        "name": "Cameras and sampling arm",
+        "purpose": "Observed the site and supplied material to experiments.",
+        "source": "https://science.nasa.gov/mission/viking-1/"
+      }
+    ],
+    "related": [
+      "pathfinder",
+      "insight"
+    ],
+    "discovery": {
+      "text": "Viking returned detailed surface imagery and extended weather observations.",
+      "source": "https://science.nasa.gov/mission/viking-1/"
+    },
+    "finalOutcome": {
+      "text": "Contact was lost in 1982 after a faulty command; the lander remains on Mars.",
+      "source": "https://science.nasa.gov/mission/viking-1/"
+    },
+    "imageMeta": {
+      "source": "https://science.nasa.gov/mission/viking-1/",
+      "type": "Surface photograph",
+      "alt": "Viking 1’s first black-and-white surface image shows rocks and a lander footpad.",
+      "width": 1280,
+      "height": 476,
+      "original": "https://assets.science.nasa.gov/content/dam/science/psd/solar/2023/07/Viking_1_First_Image_From_Mars_1280.jpg"
+    },
+    "image": "viking",
+    "evidence": "Viking 1 returned this first surface photograph shortly after landing on 20 July 1976. It shows nearby ground and part of the lander.",
+    "credit": "NASA/JPL",
+    "researched": "2026-11-14",
+    "glossary": [
+      {
+        "term": "Sol",
+        "definition": "A Martian solar day, used to count days of surface operations.",
+        "source": "https://science.nasa.gov/mission/mer-opportunity/"
+      },
+      {
+        "term": "Heat shield",
+        "definition": "A protective part of the entry system that takes the effects of atmospheric heating.",
+        "source": "https://science.nasa.gov/photojournal/opportunitys-heat-shield-in-color-sol-335/"
+      }
+    ]
+  },
+  "pathfinder": {
+    "aliases": [
+      "sojourner",
+      "path finder",
+      "carl sagan memorial station"
+    ],
+    "events": [
+      {
+        "date": "1996-12-04",
+        "label": "Launch",
+        "detail": "Pathfinder began its trip to Mars.",
+        "source": "https://science.nasa.gov/mission/mars-pathfinder/"
+      },
+      {
+        "date": "1997-07-04",
+        "label": "Landing",
+        "detail": "Airbags cushioned arrival at Ares Vallis.",
+        "source": "https://science.nasa.gov/mission/mars-pathfinder/"
+      },
+      {
+        "date": "1997-09-27",
+        "label": "Final transmission",
+        "detail": "The final data arrived from the mission.",
+        "source": "https://science.nasa.gov/mission/mars-pathfinder/"
+      }
+    ],
+    "instruments": [
+      {
+        "name": "Imager for Mars Pathfinder",
+        "purpose": "Recorded the landing site and rover activities.",
+        "source": "https://science.nasa.gov/mission/mars-pathfinder/"
+      },
+      {
+        "name": "Rover composition measurements",
+        "purpose": "Investigated the chemical makeup of rocks and soil.",
+        "source": "https://science.nasa.gov/mission/mars-pathfinder/"
+      }
+    ],
+    "related": [
+      "rover",
+      "shield",
+      "viking"
+    ],
+    "discovery": {
+      "text": "Rock, soil and weather observations supported a warmer, wetter ancient Mars.",
+      "source": "https://science.nasa.gov/mission/mars-pathfinder/"
+    },
+    "finalOutcome": {
+      "text": "The lander and Sojourner stopped returning data in September 1997 and remain at Ares Vallis.",
+      "source": "https://science.nasa.gov/mission/mars-pathfinder/"
+    },
+    "imageMeta": {
+      "source": "https://science.nasa.gov/mission/mars-pathfinder/",
+      "type": "Processed panorama",
+      "alt": "Sojourner beside a large rock, seen across the Pathfinder lander’s deck in a stitched Mars panorama.",
+      "width": 1280,
+      "height": 720,
+      "original": "https://assets.science.nasa.gov/content/dam/science/psd/solar/2023/07/pathfinder20160226-16.jpg"
+    },
+    "image": "pathfinder",
+    "evidence": "Pathfinder’s gallery panorama combines roughly 100 frames. Colors were processed to distinguish terrain; the sky and a small area near the antenna were retouched.",
+    "credit": "NASA/JPL-Caltech",
+    "researched": "2026-11-14",
+    "glossary": [
+      {
+        "term": "Sol",
+        "definition": "A Martian solar day, used to count days of surface operations.",
+        "source": "https://science.nasa.gov/mission/mer-opportunity/"
+      },
+      {
+        "term": "Heat shield",
+        "definition": "A protective part of the entry system that takes the effects of atmospheric heating.",
+        "source": "https://science.nasa.gov/photojournal/opportunitys-heat-shield-in-color-sol-335/"
+      }
+    ]
+  },
+  "shield": {
+    "aliases": [
+      "opportunity",
+      "oppy",
+      "mer-b",
+      "spirit"
+    ],
+    "events": [
+      {
+        "date": "2003-07-07",
+        "label": "Rover launch",
+        "detail": "Opportunity departed Earth with its entry hardware.",
+        "source": "https://science.nasa.gov/mission/mer-opportunity/"
+      },
+      {
+        "date": "2004-01-25",
+        "label": "Landing (UTC)",
+        "detail": "The shield separated during entry before rover touchdown.",
+        "source": "https://science.nasa.gov/mission/mer-opportunity/"
+      },
+      {
+        "date": "2005-01-02",
+        "label": "Shield photographed",
+        "detail": "Opportunity documented the remains.",
+        "source": "https://science.nasa.gov/photojournal/opportunitys-heat-shield-in-color-sol-335/"
+      },
+      {
+        "date": "2018-06-10",
+        "label": "Rover’s last communication",
+        "detail": "A major dust storm darkened the solar-powered rover’s sky.",
+        "source": "https://science.nasa.gov/mission/mer-opportunity/"
+      },
+      {
+        "date": "2019-02-13",
+        "label": "Rover mission declared complete",
+        "detail": "Recovery efforts ended; the shield had already been inactive since entry.",
+        "source": "https://science.nasa.gov/mission/mer-opportunity/"
+      }
+    ],
+    "instruments": [
+      {
+        "name": "Heat shield",
+        "purpose": "Protected the spacecraft during atmospheric entry; the shield itself was not a science instrument.",
+        "source": "https://science.nasa.gov/photojournal/opportunitys-heat-shield-in-color-sol-335/"
+      },
+      {
+        "name": "Rover cameras and spectrometers",
+        "purpose": "Opportunity examined rock textures and minerals after landing.",
+        "source": "https://science.nasa.gov/mission/mer-opportunity/"
+      }
+    ],
+    "related": [
+      "pathfinder",
+      "backshell"
+    ],
+    "discovery": {
+      "text": "Opportunity found mineral and rock evidence of ancient water; this exhibit is its discarded shield, not the rover itself.",
+      "source": "https://science.nasa.gov/mission/mer-opportunity/"
+    },
+    "finalOutcome": {
+      "text": "The shield separated in 2004. Opportunity’s later silence in 2018 followed a severe dust storm; NASA ended recovery attempts in February 2019.",
+      "source": "https://science.nasa.gov/mission/mer-opportunity/"
+    },
+    "imageMeta": {
+      "source": "https://science.nasa.gov/photojournal/opportunitys-heat-shield-in-color-sol-335/",
+      "type": "Surface photograph",
+      "alt": "On Jan. 2, 2005, the rover’s panoramic camera photographed the shield remains from the Martian surface.",
+      "width": 1280,
+      "height": 727
+    },
+    "researched": "2026-11-14",
+    "references": [
+      {
+        "title": "NASA · Spirit and Opportunity science",
+        "url": "https://science.nasa.gov/mission/mars-exploration-rovers-spirit-and-opportunity/"
+      },
+      {
+        "title": "NASA · Opportunity mission history",
+        "url": "https://science.nasa.gov/mission/mer-opportunity/"
+      },
+      {
+        "title": "NASA · Spirit mission history",
+        "url": "https://science.nasa.gov/mission/mer-spirit/"
+      }
+    ],
+    "glossary": [
+      {
+        "term": "Sol",
+        "definition": "A Martian solar day, used to count days of surface operations.",
+        "source": "https://science.nasa.gov/mission/mer-opportunity/"
+      },
+      {
+        "term": "Heat shield",
+        "definition": "A protective part of the entry system that takes the effects of atmospheric heating.",
+        "source": "https://science.nasa.gov/photojournal/opportunitys-heat-shield-in-color-sol-335/"
+      }
+    ]
+  },
+  "insight": {
+    "aliases": [
+      "marsquakes",
+      "seismometer",
+      "seis",
+      "mars quake"
+    ],
+    "events": [
+      {
+        "date": "2018-05-05",
+        "label": "Launch",
+        "detail": "InSight departed Earth.",
+        "source": "https://science.nasa.gov/mission/insight/"
+      },
+      {
+        "date": "2018-11-26",
+        "label": "Landing",
+        "detail": "It reached Elysium Planitia.",
+        "source": "https://science.nasa.gov/mission/insight/"
+      },
+      {
+        "date": "2022-12-15",
+        "label": "Last communication",
+        "detail": "The final contact preceded two missed communication attempts.",
+        "source": "https://www.nasa.gov/missions/insight/nasa-retires-insight-mars-lander-mission-after-years-of-science/"
+      },
+      {
+        "date": "2022-12-21",
+        "label": "Retirement announced",
+        "detail": "NASA declared the mission over after loss of power.",
+        "source": "https://www.nasa.gov/missions/insight/nasa-retires-insight-mars-lander-mission-after-years-of-science/"
+      }
+    ],
+    "instruments": [
+      {
+        "name": "SEIS seismometer",
+        "purpose": "Measured ground vibrations from marsquakes and impacts.",
+        "source": "https://science.nasa.gov/mission/insight/science-instruments/"
+      },
+      {
+        "name": "RISE radio experiment",
+        "purpose": "Tracked rotational wobble to investigate the core.",
+        "source": "https://science.nasa.gov/mission/insight/science-instruments/"
+      },
+      {
+        "name": "HP3 heat probe",
+        "purpose": "Attempted deep heat-flow measurements but did not reach its intended depth.",
+        "source": "https://science.nasa.gov/mission/insight/science-instruments/"
+      }
+    ],
+    "related": [
+      "alsep",
+      "viking"
+    ],
+    "discovery": {
+      "text": "Seismic measurements let researchers investigate the planet’s internal layers.",
+      "source": "https://science.nasa.gov/mission/insight/science-instruments/"
+    },
+    "finalOutcome": {
+      "text": "Dust-covered solar arrays could no longer provide enough power. NASA announced retirement on 21 December 2022; last contact was 15 December.",
+      "source": "https://www.nasa.gov/missions/insight/nasa-retires-insight-mars-lander-mission-after-years-of-science/"
+    },
+    "imageMeta": {
+      "source": "https://science.nasa.gov/photojournal/insights-final-selfie/",
+      "type": "Selfie mosaic",
+      "alt": "InSight’s dusty deck and circular solar panels in its final selfie mosaic.",
+      "width": 1280,
+      "height": 768,
+      "original": "https://assets.science.nasa.gov/content/dam/science/psd/photojournal/pia/pia25/pia25287/PIA25287.jpg"
+    },
+    "image": "insight",
+    "evidence": "InSight’s final selfie, assembled from arm-camera views taken on 24 April 2022, shows dust covering the lander and solar panels.",
+    "credit": "NASA/JPL-Caltech",
+    "researched": "2026-11-14",
+    "facts": [
+      [
+        "Landed",
+        "26 November 2018"
+      ],
+      [
+        "Robotic arm",
+        "About 1.8 m"
+      ],
+      [
+        "Last contact",
+        "15 December 2022"
+      ]
+    ],
+    "references": [
+      {
+        "title": "NASA · InSight",
+        "url": "https://science.nasa.gov/mission/insight/"
+      },
+      {
+        "title": "NASA · InSight retirement",
+        "url": "https://www.nasa.gov/missions/insight/nasa-retires-insight-mars-lander-mission-after-years-of-science/"
+      },
+      {
+        "title": "NASA · InSight instruments",
+        "url": "https://science.nasa.gov/mission/insight/science-instruments/"
+      }
+    ],
+    "glossary": [
+      {
+        "term": "Seismometer",
+        "definition": "An instrument that measures tiny motions of the ground. Scientists use the resulting waves to investigate a planet’s interior.",
+        "source": "https://science.nasa.gov/mission/insight/science-instruments/"
+      },
+      {
+        "term": "Marsquake",
+        "definition": "Ground shaking on Mars. Its seismic waves can carry information about the rocks they travel through.",
+        "source": "https://science.nasa.gov/mission/insight/science-instruments/"
+      }
+    ]
+  },
+  "backshell": {
+    "aliases": [
+      "perseverance",
+      "parachute",
+      "mars 2020",
+      "landing system"
+    ],
+    "events": [
+      {
+        "date": "2020-07-30",
+        "label": "Launch",
+        "detail": "Mars 2020 departed Earth.",
+        "source": "https://www.jpl.nasa.gov/news/press_kits/mars_2020/landing/mission/"
+      },
+      {
+        "date": "2021-02-18",
+        "label": "Descent and separation",
+        "detail": "The backshell and parachute separated before rover touchdown.",
+        "source": "https://science.nasa.gov/photojournal/rover-landing-gear-seen-from-the-air-by-mars-helicopter/"
+      },
+      {
+        "date": "2022-04-19",
+        "label": "Aerial inspection",
+        "detail": "Ingenuity photographed the remains during flight 26.",
+        "source": "https://science.nasa.gov/photojournal/rover-landing-gear-seen-from-the-air-by-mars-helicopter/"
+      }
+    ],
+    "instruments": [
+      {
+        "name": "Parachute and backshell",
+        "purpose": "Engineering systems that slowed and protected the spacecraft during descent.",
+        "source": "https://science.nasa.gov/photojournal/rover-landing-gear-seen-from-the-air-by-mars-helicopter/"
+      }
+    ],
+    "related": [
+      "shield",
+      "ingenuity"
+    ],
+    "discovery": {
+      "text": "Images from above offered engineers evidence of how landing hardware survived impact.",
+      "source": "https://science.nasa.gov/photojournal/rover-landing-gear-seen-from-the-air-by-mars-helicopter/"
+    },
+    "finalOutcome": {
+      "text": "These delivery components were deliberately separated; their retirement does not mean Perseverance’s scientific mission ended.",
+      "source": "https://science.nasa.gov/photojournal/rover-landing-gear-seen-from-the-air-by-mars-helicopter/"
+    },
+    "imageMeta": {
+      "source": "https://science.nasa.gov/photojournal/rover-landing-gear-seen-from-the-air-by-mars-helicopter/",
+      "type": "Aerial photograph",
+      "alt": "Ingenuity photographed the backshell and parachute from about eight meters above the surface on April 19, 2022.",
+      "width": 1280,
+      "height": 1193
+    },
+    "researched": "2026-11-14",
+    "glossary": [
+      {
+        "term": "Sol",
+        "definition": "A Martian solar day, used to count days of surface operations.",
+        "source": "https://science.nasa.gov/mission/mer-opportunity/"
+      },
+      {
+        "term": "Heat shield",
+        "definition": "A protective part of the entry system that takes the effects of atmospheric heating.",
+        "source": "https://science.nasa.gov/photojournal/opportunitys-heat-shield-in-color-sol-335/"
+      }
+    ]
+  },
+  "ingenuity": {
+    "aliases": [
+      "helicopter",
+      "mars helicopter",
+      "flight",
+      "rotorcraft"
+    ],
+    "events": [
+      {
+        "date": "2020-07-30",
+        "label": "Launch with Mars 2020",
+        "detail": "The helicopter traveled with Perseverance.",
+        "source": "https://www.jpl.nasa.gov/news/press_kits/mars_2020/landing/mission/"
+      },
+      {
+        "date": "2021-02-18",
+        "label": "Arrival",
+        "detail": "Perseverance delivered it to Mars.",
+        "source": "https://www.jpl.nasa.gov/news/press_kits/mars_2020/landing/mission/"
+      },
+      {
+        "date": "2021-04-19",
+        "label": "First powered flight",
+        "detail": "Controlled flight was demonstrated on another planet.",
+        "source": "https://science.nasa.gov/mission/mars-2020-perseverance/ingenuity-mars-helicopter/"
+      },
+      {
+        "date": "2024-01-18",
+        "label": "Final flight",
+        "detail": "Flight 72 ended with rotor damage.",
+        "source": "https://science.nasa.gov/mission/mars-2020-perseverance/ingenuity-mars-helicopter/"
+      },
+      {
+        "date": "2024-01-25",
+        "label": "Flight mission ended",
+        "detail": "NASA announced the end of flying operations.",
+        "source": "https://science.nasa.gov/mission/mars-2020-perseverance/ingenuity-mars-helicopter/"
+      }
+    ],
+    "instruments": [
+      {
+        "name": "Counter-rotating rotors",
+        "purpose": "Generated lift in the thin Martian atmosphere.",
+        "source": "https://www.jpl.nasa.gov/missions/ingenuity/"
+      },
+      {
+        "name": "Navigation camera",
+        "purpose": "Supported autonomous flight by tracking surface features.",
+        "source": "https://www.jpl.nasa.gov/missions/ingenuity/"
+      }
+    ],
+    "related": [
+      "backshell",
+      "pathfinder"
+    ],
+    "discovery": {
+      "text": "A five-flight technology demonstration grew into 72 flights and aerial scouting.",
+      "source": "https://science.nasa.gov/mission/mars-2020-perseverance/ingenuity-mars-helicopter/"
+    },
+    "finalOutcome": {
+      "text": "Rotor damage on the final landing ended the ability to fly. The helicopter remains on Mars.",
+      "source": "https://science.nasa.gov/mission/mars-2020-perseverance/ingenuity-mars-helicopter/"
+    },
+    "imageMeta": {
+      "source": "https://science.nasa.gov/resource/perseverance-spots-ingenuity-at-its-final-airfield/",
+      "type": "Enhanced-color mosaic",
+      "alt": "Perseverance photographed the helicopter at its final airfield on Feb. 4, 2024. NASA assembled six frames into the enhanced-color mosaic.",
+      "width": 1200,
+      "height": 567
+    },
+    "researched": "2026-11-14",
+    "glossary": [
+      {
+        "term": "Sol",
+        "definition": "A Martian solar day, used to count days of surface operations.",
+        "source": "https://science.nasa.gov/mission/mer-opportunity/"
+      },
+      {
+        "term": "Heat shield",
+        "definition": "A protective part of the entry system that takes the effects of atmospheric heating.",
+        "source": "https://science.nasa.gov/photojournal/opportunitys-heat-shield-in-color-sol-335/"
+      }
+    ],
+    "references": [
+      {
+        "title": "NASA · Ingenuity mission",
+        "url": "https://science.nasa.gov/mission/mars-2020-perseverance/ingenuity-mars-helicopter/"
+      },
+      {
+        "title": "JPL · Ingenuity flight engineering",
+        "url": "https://www.jpl.nasa.gov/missions/ingenuity/"
+      }
+    ]
+  }
+};
+exhibits.forEach(record=>Object.assign(record,missionResearch[record.id] || {}));
 exhibits.sort((a,b)=>Number(a.year)-Number(b.year));
 
 function missionFacts(record) {
@@ -418,24 +1265,24 @@ const researchResources = [
     "group": "Moon & archives"
   },
   {
-    "title": "Catalog 1969-059C",
+    "title": "NSSDCA · Apollo 11 Lunar Module / EASEP",
     "url": "https://nssdc.gsfc.nasa.gov/nmc/spacecraft/display.action?id=1969-059C",
-    "description": "XML response unsupported by research browser; contents unverified.",
-    "status": "Contents unverified",
+    "description": "Direct retrieval verified this catalog identifies Eagle and the Apollo 11 early surface experiments. It documents the 20 July landing and 21 July ascent in UTC.",
+    "status": "Reviewed by direct retrieval",
     "group": "Moon & archives"
   },
   {
-    "title": "Catalog 1971-063C",
+    "title": "NSSDCA · Apollo 15 Lunar Module / ALSEP",
     "url": "https://nssdc.gsfc.nasa.gov/nmc/spacecraft/display.action?id=1971-063C",
-    "description": "XML response unsupported by research browser; contents unverified.",
-    "status": "Contents unverified",
+    "description": "This catalog is the Apollo 15 lunar module record, including the rover it carried. It is not a standalone LRV catalog entry.",
+    "status": "Reviewed by direct retrieval",
     "group": "Moon & archives"
   },
   {
-    "title": "Catalog 1969-099C",
+    "title": "NSSDCA · Apollo 12 Lunar Module / ALSEP",
     "url": "https://nssdc.gsfc.nasa.gov/nmc/spacecraft/display.action?id=1969-099C",
-    "description": "XML response unsupported by research browser; contents unverified.",
-    "status": "Contents unverified",
+    "description": "This entry describes Apollo 12 Intrepid and its experiments, not the Apollo 17 station featured in the exhibit. Linked separately to avoid confusing the two missions.",
+    "status": "Reviewed by direct retrieval",
     "group": "Moon & archives"
   },
   {
@@ -528,5 +1375,205 @@ const researchResources = [
     "description": "Lunar imagery and maps from the LROC partner archive. Individual image credits remain with each exhibit.",
     "status": "Reviewed",
     "group": "Moon & archives"
+  }
+];
+
+// Grounded cross-mission answers for the built-in guide and optional server context.
+const museumKnowledge = [
+  {
+    "id": "opportunity-ended",
+    "keywords": [
+      "opportunity stop",
+      "opportunity stopped",
+      "opportunity end",
+      "oppy died",
+      "last message",
+      "battery dark"
+    ],
+    "answer": "Opportunity last communicated on 10 June 2018 during a major dust storm that reduced sunlight for its solar panels. Recovery attempts failed, and NASA declared the mission complete on 13 February 2019. The museum exhibit shows its heat shield, which had separated in 2004; the rover and shield have different endings.",
+    "source": "https://science.nasa.gov/mission/mer-opportunity/",
+    "related": [
+      "shield",
+      "pathfinder"
+    ]
+  },
+  {
+    "id": "spirit-opportunity",
+    "keywords": [
+      "spirit opportunity difference",
+      "spirit versus opportunity",
+      "spirit vs opportunity",
+      "spirit and opportunity"
+    ],
+    "answer": "Spirit and Opportunity were twin Mars Exploration Rovers, sent to different sites to investigate past water. Spirit explored Gusev Crater and last communicated on 22 March 2010 after becoming stuck in soil. Opportunity explored Meridiani Planum and last communicated on 10 June 2018 during a dust storm. This collection features Opportunity’s discarded heat shield, not a separate Spirit exhibit.",
+    "source": "https://science.nasa.gov/mission/mars-exploration-rovers-spirit-and-opportunity/",
+    "sources": [
+      "https://science.nasa.gov/mission/mer-spirit/",
+      "https://science.nasa.gov/mission/mer-opportunity/"
+    ],
+    "related": [
+      "shield"
+    ]
+  },
+  {
+    "id": "longest-rover",
+    "keywords": [
+      "longest rover",
+      "rover survived longest",
+      "longest lasting",
+      "longest lived",
+      "furthest rover",
+      "farthest rover"
+    ],
+    "answer": "“Longest” can mean operating time or driving distance. Among the completed rover missions discussed in this museum, Opportunity operated from 2004 until its final communication in 2018, far beyond its 90-sol plan. NASA records a total of 45.16 km. This is a historical total, not a claim that it still holds the current distance record. The museum does not maintain live rover rankings.",
+    "source": "https://science.nasa.gov/mission/mer-opportunity/",
+    "related": [
+      "shield",
+      "pathfinder"
+    ]
+  },
+  {
+    "id": "marsquake",
+    "keywords": [
+      "marsquake",
+      "mars quake",
+      "quake on mars"
+    ],
+    "answer": "A marsquake is shaking of the Martian ground. A seismometer measures the resulting vibrations. By studying how seismic waves travel, scientists investigate internal layers that cameras cannot see. InSight’s measurements also detected vibrations from meteorite impacts.",
+    "source": "https://science.nasa.gov/mission/insight/science-instruments/",
+    "related": [
+      "insight",
+      "alsep"
+    ]
+  },
+  {
+    "id": "seismometer",
+    "keywords": [
+      "seismometer work",
+      "seismic instrument",
+      "seismometer",
+      "seismic waves"
+    ],
+    "answer": "A seismometer measures ground motion. Waves from quakes and impacts change as they travel through different materials, allowing scientists to infer properties of a planet’s interior. InSight’s SEIS instrument used environmental sensors to help distinguish seismic signals from effects such as wind.",
+    "source": "https://science.nasa.gov/mission/insight/science-instruments/",
+    "related": [
+      "insight",
+      "alsep"
+    ]
+  },
+  {
+    "id": "insight-ended",
+    "keywords": [
+      "insight stop",
+      "insight end",
+      "insight power",
+      "insight dust"
+    ],
+    "answer": "Dust on InSight’s solar panels reduced available power. The last communication was on 15 December 2022. NASA announced the mission’s retirement on 21 December after two failed contact attempts. The heat probe also did not reach its intended depth; that instrument limitation is distinct from the later power loss.",
+    "source": "https://www.nasa.gov/missions/insight/nasa-retires-insight-mars-lander-mission-after-years-of-science/",
+    "sources": [
+      "https://science.nasa.gov/mission/insight/science-instruments/"
+    ],
+    "related": [
+      "insight"
+    ]
+  },
+  {
+    "id": "left-behind",
+    "keywords": [
+      "why nasa leave",
+      "left equipment moon",
+      "abandoned equipment",
+      "leave equipment",
+      "left behind",
+      "historically important"
+    ],
+    "answer": "The objects have different histories. Landing stages and heat shields were designed to finish one job and stay behind. Lunar rovers had no return vehicle. Experiment stations were left to keep measuring. These surviving objects preserve evidence of engineering decisions and scientific exploration; calling every one a failure would be misleading. That historical interpretation is the museum’s theme.",
+    "source": "https://nssdc.gsfc.nasa.gov/planetary/lunar/apollo_lrv.html",
+    "related": [
+      "eagle",
+      "rover",
+      "alsep",
+      "shield"
+    ]
+  },
+  {
+    "id": "lunar-rovers",
+    "keywords": [
+      "apollo lunar vehicles",
+      "lunar rovers left",
+      "moon buggy",
+      "what happened rovers"
+    ],
+    "answer": "Apollo 15, 16 and 17 each used an electric Lunar Roving Vehicle. Their four independently powered wheels extended astronauts’ fieldwork. All three vehicles stayed on the Moon; they were surface transport rather than return spacecraft. The Apollo 15 rover covered 27.8 km.",
+    "source": "https://nssdc.gsfc.nasa.gov/planetary/lunar/apollo_lrv.html",
+    "related": [
+      "rover",
+      "eagle"
+    ]
+  },
+  {
+    "id": "ingenuity-flight",
+    "keywords": [
+      "ingenuity fly",
+      "helicopter fly mars",
+      "ingenuity flight",
+      "thin atmosphere"
+    ],
+    "answer": "Ingenuity used two counter-rotating rotors to produce lift in the thin Martian atmosphere and onboard navigation to fly without a pilot controlling every movement from Earth. It demonstrated powered, controlled flight on another planet on 19 April 2021. A plan for up to five flights eventually became 72; rotor damage ended flying after the final landing.",
+    "source": "https://www.jpl.nasa.gov/missions/ingenuity/",
+    "related": [
+      "ingenuity",
+      "backshell"
+    ]
+  },
+  {
+    "id": "mars-discoveries",
+    "keywords": [
+      "mars discoveries",
+      "discoveries mars",
+      "water evidence",
+      "understanding mars",
+      "scientific breakthroughs"
+    ],
+    "answer": "Different instruments reveal different parts of Mars. Opportunity read evidence of ancient water in rocks and minerals. Pathfinder investigated rocks, soil and weather. InSight studied internal structure through seismic measurements. These findings do not establish that Mars had life; they address geology, environment and planetary history.",
+    "source": "https://science.nasa.gov/mission/mer-opportunity/",
+    "sources": [
+      "https://science.nasa.gov/mission/mars-pathfinder/",
+      "https://science.nasa.gov/mission/insight/science-instruments/"
+    ],
+    "related": [
+      "shield",
+      "pathfinder",
+      "insight"
+    ]
+  },
+  {
+    "id": "viking-life",
+    "keywords": [
+      "viking life",
+      "life mars",
+      "found life",
+      "aliens"
+    ],
+    "answer": "Viking’s soil experiments did not establish that Mars had life. Some responses were difficult to interpret, and the chemistry of the soil mattered. A biological interpretation requires evidence that rules out nonliving explanations. The museum does not claim that life has been found on Mars.",
+    "source": "https://science.nasa.gov/mission/viking-1/",
+    "related": [
+      "viking"
+    ]
+  },
+  {
+    "id": "ingenuity-comparison",
+    "keywords": [
+      "five seventy two",
+      "planned achieved",
+      "planned versus",
+      "five flights"
+    ],
+    "answer": "Ingenuity completed 72 flights compared with a technology-demonstration plan for no more than five. Both numbers count flights, so 72 divided by 5 equals 14.4 times that planned count. This arithmetic comparison does not imply that flight distance or duration increased by the same factor.",
+    "source": "https://science.nasa.gov/mission/mars-2020-perseverance/ingenuity-mars-helicopter/",
+    "related": [
+      "ingenuity"
+    ]
   }
 ];

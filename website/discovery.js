@@ -51,8 +51,9 @@ function installTimeExplorer(container) {
     container.querySelector('output').textContent = e.year;
     slider.setAttribute('aria-valuetext', e.year + ', ' + e.name);
     const story = container.querySelector('#time-story');
-    story.innerHTML = `<div class="time-photo"><img src="images/${e.image || e.id}.jpg" alt="${e.image ? e.evidence : e.name+', NASA archive'}"><span>${e.year}</span></div><div class="time-copy"><div class="eyebrow">${e.world} · ${e.mission}</div><h3>${e.name}</h3><p>${e.hook}</p><p class="caption">${e.dateLabel} · ${e.date}</p><p>${e.story}</p><a class="button primary" href="#exhibit/${e.id}">Visit this moment →</a></div>`;
-    if (!motionPreference.matches) story.animate([{opacity:.5},{opacity:1}], {duration:220});
+    story.innerHTML = `<div class="time-photo">${museumImage(e)}<span>${e.year}</span></div><div class="time-copy"><div class="eyebrow">${e.world} · ${e.mission}</div><h3>${e.name}</h3><p>${e.hook}</p><p class="caption">${e.dateLabel} · ${e.date}</p><p>${e.story}</p><a class="button primary" href="#exhibit/${e.id}">Visit this moment →</a></div>`;
+    story.getAnimations?.().forEach(animation=>animation.cancel());
+    if (!motionPreference.matches && story.animate) story.animate([{opacity:.5},{opacity:1}], {duration:220});
   }
   slider.oninput = show;
   show();
@@ -67,7 +68,7 @@ function installComparison(container) {
   second.value = 'backshell';
   function compare() {
     const selected = [first.value,second.value].map(id => exhibits.find(e => e.id === id));
-    container.querySelector('#comparison').innerHTML = selected.map(e => `<article><img src="images/${e.image || e.id}.jpg" alt="${e.image ? e.evidence : e.name+', NASA archive'}"><div class="meta">${e.world} · ${e.year}</div><h3>${e.name}</h3>${missionFacts(e)}<dl><dt>Where it stayed</dt><dd>${e.place}</dd><dt>What happened</dt><dd>${e.status}</dd><dt>The science it enabled</dt><dd>${e.science}</dd></dl><a class="button" href="#exhibit/${e.id}">Inspect evidence →</a></article>`).join('');
+    container.querySelector('#comparison').innerHTML = selected.map(e => `<article>${museumImage(e)}<div class="meta">${e.world} · ${e.year}</div><h3>${e.name}</h3>${missionFacts(e)}<dl><dt>Where it stayed</dt><dd>${e.place}</dd><dt>What happened</dt><dd>${e.status}</dd><dt>The science it enabled</dt><dd>${e.science}</dd></dl><p class="caption">${missionReferences(e)}</p><a class="button" href="#exhibit/${e.id}">Inspect evidence →</a></article>`).join('');
   }
   first.onchange = compare; second.onchange = compare; compare();
 }
@@ -97,15 +98,18 @@ function installScienceLab(container) {
   const experiments = [
     {title:'Bounce into a new era',tag:'Pathfinder / landing engineering',id:'pathfinder',kind:'bounce',steps:['Protected descent','Cushioned impact','Ready to explore'],text:['A parachute slowed the spacecraft before airbag-protected touchdown.','Inflated airbags cushioned repeated bounces. This diagram simplifies the real trajectory.','Once settled, the lander opened and Sojourner could explore nearby rocks.']},
     {title:'Listen below the surface',tag:'InSight / planetary interiors',id:'insight',kind:'seismic',steps:['A disturbance','Waves travel','Read the interior'],text:['A quake or impact sends vibrations through the planet.','Wave paths and speeds depend on the materials they travel through. The rings here are schematic.','Scientists interpret seismic measurements to investigate internal structure. This is not a recorded marsquake.']},
+    {title:'A delivery system lets go',tag:'Mars 2020 / landing sequence',id:'backshell',kind:'separation',steps:['Slow the descent','Separate the backshell','Finish the landing'],text:['The parachute and backshell protected the spacecraft during part of its descent.','The rover and rocket-powered descent stage separated from the parachute and backshell.','The powered descent system completed delivery. The backshell and parachute remained on Mars. This diagram is a simplified sequence, not an engineering simulation.']},
     {title:'Five planned. Seventy-two flown.',tag:'Ingenuity / technology to exploration',id:'ingenuity',kind:'flight',steps:['Demonstrate','Keep exploring','A lasting legacy'],text:['Ingenuity was planned for no more than five test flights.','It continued flying and helped scout terrain for the rover team.','It completed 72 flights before rotor damage ended flying operations in January 2024.']}
   ];
-  container.innerHTML=`<div class="lab-selector" role="group" aria-label="Choose a science story">${experiments.map((e,i)=>`<button data-experiment="${i}" aria-pressed="${i===0}">${e.id==='pathfinder'?'Airbag landing':e.id==='insight'?'Inside Mars':'Beyond the plan'}</button>`).join('')}</div><div class="science-lab"><div class="lab-visual" aria-hidden="true"><div class="lab-orbit"></div><div class="lab-wave wave-one"></div><div class="lab-wave wave-two"></div><div class="lab-machine"><span></span></div><div class="lab-ground"></div><div class="lab-scan"></div></div><div class="lab-copy"><div class="eyebrow" id="lab-tag"></div><h3 id="lab-title"></h3><div class="lab-steps" role="group" aria-label="Story stage"></div><p id="lab-explanation" aria-live="polite"></p><a class="button" id="lab-link">Open the mission exhibit ↗</a><p class="caption">Interactive illustration · Motion, scale and timing simplified · No live NASA telemetry</p></div></div>`;
+  container.innerHTML=`<div class="lab-selector" role="group" aria-label="Choose a science story">${experiments.map((e,i)=>`<button data-experiment="${i}" aria-pressed="${i===0}">${e.id==='pathfinder'?'Airbag landing':e.id==='insight'?'Inside Mars':e.id==='backshell'?'Letting go':'Beyond the plan'}</button>`).join('')}</div><div class="science-lab"><div class="lab-visual" aria-hidden="true"><div class="lab-orbit"></div><div class="lab-wave wave-one"></div><div class="lab-wave wave-two"></div><div class="lab-machine"><span></span></div><div class="lab-shell"></div><div class="lab-ground"></div><div class="lab-scan"></div></div><div class="lab-copy"><div class="eyebrow" id="lab-tag"></div><h3 id="lab-title"></h3><div class="lab-steps" role="group" aria-label="Story stage"></div><label class="lab-scrub">Explore the sequence<input id="lab-scrubber" type="range" min="0" max="2" step="1" value="0"><output id="lab-step-label"></output></label><p id="lab-explanation" aria-live="polite"></p><div id="lab-metrics"></div><p class="caption" id="lab-source"></p><a class="button" id="lab-link">Open the mission exhibit ↗</a><p class="caption">Interactive illustration · Motion, scale and timing simplified · No live NASA telemetry</p></div></div>`;
   let selected=0;
   function stage(index) {
     const experiment=experiments[selected];
     const visual=container.querySelector('.lab-visual');
     visual.dataset.kind=experiment.kind;visual.dataset.stage=String(index);
     container.querySelector('#lab-explanation').textContent=experiment.text[index];
+    const scrubber=container.querySelector('#lab-scrubber');scrubber.value=String(index);scrubber.setAttribute('aria-valuetext',experiment.steps[index]);
+    container.querySelector('#lab-step-label').textContent=(index+1)+' / '+experiment.steps[index];
     container.querySelectorAll('[data-lab-stage]').forEach(button=>button.setAttribute('aria-pressed',String(Number(button.dataset.labStage)===index)));
   }
   function choose(index) {
@@ -116,8 +120,12 @@ function installScienceLab(container) {
     container.querySelector('.lab-steps').innerHTML=e.steps.map((name,i)=>`<button data-lab-stage="${i}" aria-pressed="${i===0}">${i+1} / ${name}</button>`).join('');
     container.querySelectorAll('[data-lab-stage]').forEach(button=>button.onclick=()=>stage(Number(button.dataset.labStage)));
     container.querySelectorAll('[data-experiment]').forEach(button=>button.setAttribute('aria-pressed',String(Number(button.dataset.experiment)===index)));
+    const record=exhibits.find(record=>record.id===e.id);
+    container.querySelector('#lab-source').innerHTML=record?missionReferences(record):'';
+    container.querySelector('#lab-metrics').innerHTML=e.kind==='flight'?'<div class="flight-bars"><p>Same unit: number of flights</p><div><span>Planned: 5</span><i style="--bar:6.944%"></i></div><div><span>Completed: 72</span><i style="--bar:100%"></i></div><p class="caption">Bars share a linear scale from 0 to 72 flights. The completed count was 14.4 times the original planned maximum.</p></div>':'';
     stage(0);
   }
   container.querySelectorAll('[data-experiment]').forEach(button=>button.onclick=()=>choose(Number(button.dataset.experiment)));
+  container.querySelector('#lab-scrubber').oninput=event=>stage(Number(event.target.value));
   choose(0);
 }

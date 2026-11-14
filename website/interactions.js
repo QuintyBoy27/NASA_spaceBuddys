@@ -5,12 +5,13 @@ let revealObserver;
 
 function enhanceMuseum() {
   installMoonExplorer();
+  if(!location.hash.startsWith('#exhibit/'))tourActive=false;
   revealObserver?.disconnect();
   document.querySelectorAll('nav a').forEach(link => {
     if (link.hash === location.hash) link.setAttribute('aria-current', 'page');
     else link.removeAttribute('aria-current');
   });
-  if (!motionPreference.matches) {
+  if (!motionPreference.matches && typeof main.animate==='function' && 'IntersectionObserver' in window) {
     main.animate([{opacity: 0, transform: 'translateY(10px)'}, {opacity: 1, transform: 'translateY(0)'}], {duration: 400, easing: 'ease-out'});
     revealObserver = new IntersectionObserver(entries => {
       entries.forEach(entry => {
@@ -86,6 +87,7 @@ function openMoonStory(topic) {
   });
   dialog.addEventListener('click', event => { if (event.target === dialog) dialog.close(); });
   dialog.addEventListener('close', () => dialog.remove(), {once: true});
+  prepareMuseumDialog(dialog);
   document.body.append(dialog);
   dialog.showModal();
 }
@@ -124,8 +126,44 @@ function openImageViewer(photo) {
   dialog.querySelector('#close-viewer').onclick = () => dialog.close();
   dialog.addEventListener('click', event => { if (event.target === dialog) dialog.close(); });
   dialog.addEventListener('close', () => dialog.remove(), {once: true});
+  prepareMuseumDialog(dialog);
   document.body.append(dialog);
   dialog.showModal();
 }
 
  document.addEventListener("visibilitychange",()=>document.body.classList.toggle("page-hidden",document.hidden));
+
+// Shared rendering keeps image metadata and explanatory records consistent.
+function escapeMuseumText(value) {
+  return String(value ?? '').replace(/[&<>"']/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+}
+function museumImage(record, options={}) {
+  const dimensions={eagle:[1000,562],rover:[952,952],alsep:[1280,960],shield:[1280,727],backshell:[1280,1193],ingenuity:[1200,567],moon:[1280,1280],mars:[1280,1280]};
+  const meta=record.imageMeta||{};
+  const image=record.image||record.id;
+  const [width,height]=dimensions[image]||[1280,960];
+  const alt=meta.alt||record.evidence||record.name;
+  const srcset=meta.small?` srcset="${escapeMuseumText(meta.small)} 640w, images/${escapeMuseumText(image)}.jpg ${meta.width||width}w" sizes="(max-width:750px) 90vw, 45vw"`:'';
+  return `<img src="images/${escapeMuseumText(image)}.jpg" alt="${escapeMuseumText(alt)}" width="${meta.width||width}" height="${meta.height||height}" class="${escapeMuseumText(options.className||'')}" loading="${options.loading||'lazy'}" decoding="async"${options.priority?' fetchpriority="high"':''}${srcset}>`;
+}
+function ensurePageHeading() {
+  if(main.querySelector('h1'))return;
+  const heading=main.querySelector('h2');
+  if(!heading)return;
+  const title=document.createElement('h1');title.className='page-title';title.tabIndex=-1;
+  title.innerHTML=heading.innerHTML;heading.replaceWith(title);
+}
+function installMissionStory() {
+  const id=location.hash.startsWith('#exhibit/')?location.hash.slice(9):null;
+  const record=exhibits.find(e=>e.id===id);
+  if(!record)return;
+  const part=document.createElement('div');part.className='mission-story';
+  const sourceLink=(url,label='NASA evidence ↗')=>`<a href="${escapeMuseumText(url)}" target="_blank" rel="noopener">${label}</a>`;
+  part.innerHTML=`${record.discovery?`<div class="discovery-finding"><div class="eyebrow">A discovery to remember</div><p>${escapeMuseumText(record.discovery.text)}</p>${sourceLink(record.discovery.source)}</div>`:''}${record.events?.length?`<div class="eyebrow">From first launch to final chapter</div><h3>A mission in moments</h3><ol class="mission-events">${record.events.map(event=>`<li><time datetime="${event.date}">${escapeMuseumText(event.date)}</time><div><h4>${escapeMuseumText(event.label)}</h4><p>${escapeMuseumText(event.detail)}</p>${sourceLink(event.source)}</div></li>`).join('')}</ol>`:''}${record.instruments?.length?`<details class="instrument-notes"><summary>Inside the engineering · instruments & systems</summary><dl>${record.instruments.map(instrument=>`<dt>${escapeMuseumText(instrument.name)}</dt><dd>${escapeMuseumText(instrument.purpose)} ${sourceLink(instrument.source)}</dd>`).join('')}</dl></details>`:''}${record.glossary?.length?`<details class="instrument-notes"><summary>Space words, explained</summary><dl>${record.glossary.map(term=>`<dt>${escapeMuseumText(term.term)}</dt><dd>${escapeMuseumText(term.definition)} ${sourceLink(term.source)}</dd>`).join('')}</dl></details>`:''}${record.related?.length?`<div class="related-missions"><div class="eyebrow">Follow the connection</div><h3>Another object, a shared question.</h3><div class="actions">${record.related.map(id=>exhibits.find(e=>e.id===id)).filter(Boolean).map(e=>`<a class="button" href="#exhibit/${e.id}">${e.name} ↗</a>`).join('')}</div></div>`:''}`;
+  main.querySelector('.interpretation')?.after(part);
+}
+// Native dialog handles Escape and focus trapping; explicitly return to the opener.
+function prepareMuseumDialog(dialog) {
+  const opener=document.activeElement;
+  dialog.addEventListener('close',()=>{if(opener?.isConnected)opener.focus({preventScroll:true});},{once:true});
+}
