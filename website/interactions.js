@@ -127,3 +127,5 @@ function openImageViewer(photo) {
   document.body.append(dialog);
   dialog.showModal();
 }
+
+ document.addEventListener("visibilitychange",()=>document.body.classList.toggle("page-hidden",document.hidden));

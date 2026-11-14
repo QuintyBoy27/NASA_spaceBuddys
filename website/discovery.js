@@ -50,7 +50,7 @@ function installTimeExplorer(container) {
     container.querySelector('output').textContent = e.year;
     slider.setAttribute('aria-valuetext', e.year + ', ' + e.name);
     const story = container.querySelector('#time-story');
-    story.innerHTML = `<div class="time-photo"><img src="images/${e.id}.jpg" alt="${e.name}, NASA archive"><span>${e.year}</span></div><div class="time-copy"><div class="eyebrow">${e.world} · ${e.mission}</div><h3>${e.name}</h3><p>${e.hook}</p><p>${e.story}</p><a class="button primary" href="#exhibit/${e.id}">Visit this moment →</a></div>`;
+    story.innerHTML = `<div class="time-photo"><img src="images/${e.image || e.id}.jpg" alt="${e.image ? e.evidence : e.name+', NASA archive'}"><span>${e.year}</span></div><div class="time-copy"><div class="eyebrow">${e.world} · ${e.mission}</div><h3>${e.name}</h3><p>${e.hook}</p><p class="caption">${e.dateLabel} · ${e.date}</p><p>${e.story}</p><a class="button primary" href="#exhibit/${e.id}">Visit this moment →</a></div>`;
     if (!motionPreference.matches) story.animate([{opacity:.5},{opacity:1}], {duration:220});
   }
   slider.oninput = show;
@@ -62,10 +62,11 @@ function installComparison(container) {
   container.innerHTML = `<div class="compare-selectors"><label>First artifact<select id="compare-first">${options}</select></label><label>Second artifact<select id="compare-second">${options}</select></label></div><div id="comparison" class="comparison"></div>`;
   const first = container.querySelector('#compare-first');
   const second = container.querySelector('#compare-second');
+  first.value = exhibits[0].id;
   second.value = 'backshell';
   function compare() {
     const selected = [first.value,second.value].map(id => exhibits.find(e => e.id === id));
-    container.querySelector('#comparison').innerHTML = selected.map(e => `<article><img src="images/${e.id}.jpg" alt="${e.name}, NASA archive"><div class="meta">${e.world} · ${e.year}</div><h3>${e.name}</h3><dl><dt>Where it stayed</dt><dd>${e.place}</dd><dt>What happened</dt><dd>${e.status}</dd><dt>The science it enabled</dt><dd>${e.science}</dd></dl><a class="button" href="#exhibit/${e.id}">Inspect evidence →</a></article>`).join('');
+    container.querySelector('#comparison').innerHTML = selected.map(e => `<article><img src="images/${e.image || e.id}.jpg" alt="${e.image ? e.evidence : e.name+', NASA archive'}"><div class="meta">${e.world} · ${e.year}</div><h3>${e.name}</h3>${missionFacts(e)}<dl><dt>Where it stayed</dt><dd>${e.place}</dd><dt>What happened</dt><dd>${e.status}</dd><dt>The science it enabled</dt><dd>${e.science}</dd></dl><a class="button" href="#exhibit/${e.id}">Inspect evidence →</a></article>`).join('');
   }
   first.onchange = compare; second.onchange = compare; compare();
 }

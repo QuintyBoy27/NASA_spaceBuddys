@@ -26,6 +26,7 @@ function installEditorial() {
   let timer;
   let playing = false;
   let visible = true;
+  let copyAnimation;
   function selectScene(index) {
     current = index;
     const scene = scenes[index];
@@ -38,11 +39,12 @@ function installEditorial() {
     opening.querySelector('.cinema-credit').textContent = 'Archival image · ' + record.credit;
     opening.querySelectorAll('.cinema-images img').forEach((image,i)=>image.classList.toggle('active',i===index));
     opening.querySelectorAll('[data-scene]').forEach((button,i)=>button.setAttribute('aria-pressed',String(i===index)));
-    if (!motionPreference.matches) opening.querySelector('.cinema-copy').animate([{opacity:.2,transform:'translateY(12px)'},{opacity:1,transform:'translateY(0)'}],{duration:550,easing:'ease-out'});
+    copyAnimation?.cancel();
+    if (!motionPreference.matches) copyAnimation=opening.querySelector('.cinema-copy').animate([{opacity:.2,transform:'translateY(12px)'},{opacity:1,transform:'translateY(0)'}],{duration:550,easing:'ease-out'});
   }
   function schedule() {
     clearInterval(timer);
-    if (playing && visible && !document.hidden && !opening.matches(':focus-within')) timer = setInterval(()=>selectScene((current+1)%scenes.length),8000);
+    if (opening.isConnected && playing && visible && !document.hidden && !opening.matches(':focus-within')) timer = setInterval(()=>selectScene((current+1)%scenes.length),8000);
   }
   function setPlaying(value) {
     playing=value;
@@ -57,20 +59,22 @@ function installEditorial() {
   document.addEventListener('visibilitychange',schedule);
   const observer = new IntersectionObserver(entries=>{visible=entries[0].isIntersecting;schedule();});
   observer.observe(opening);
-  stopEditorial=()=>{playing=false;clearInterval(timer);observer.disconnect();document.removeEventListener('visibilitychange',schedule);};
+  stopEditorial=()=>{playing=false;copyAnimation?.cancel();clearInterval(timer);observer.disconnect();document.removeEventListener('visibilitychange',schedule);};
   selectScene(0);
   installSpotlight(moonSection);
+  // The archive already presents every artifact; omit the repeated card gallery.
+  [...main.children].find(node=>node.querySelector('.grid'))?.remove();
 }
 
 function installSpotlight(after) {
   const gallery=document.createElement('section');
   gallery.className='spotlight-section';
-  gallery.innerHTML=`<div class="editorial-heading"><div class="eyebrow">Inside the collection</div><h2>Six objects.<br><em>Extraordinary journeys.</em></h2><p>Choose an artifact to bring its story into focus.</p></div><div class="spotlight"><div id="spotlight-preview"></div><div class="spotlight-list" aria-label="Artifact previews">${exhibits.map((e,i)=>`<button data-artifact="${i}" aria-pressed="${i===0}"><span>${e.name}</span><small>${e.world} · ${e.year}</small><b aria-hidden="true">↗</b></button>`).join('')}</div></div><div class="archive-header"><h3>Through the archive</h3><div><button id="archive-prev" aria-label="Previous archive images">←</button><button id="archive-next" aria-label="Next archive images">→</button></div></div><div class="archive-rail" tabindex="0" aria-label="Scrollable NASA image gallery">${exhibits.map(e=>`<a href="#exhibit/${e.id}"><img src="images/${e.id}.jpg" alt="${e.name}, NASA archive" loading="lazy"><span>${e.name} ↗</span></a>`).join('')}</div><p class="caption">NASA archival imagery · Individual image credits and scientific sources in each exhibit.</p>`;
+  gallery.innerHTML=`<div class="editorial-heading"><div class="eyebrow">Inside the collection</div><h2>${exhibits.length} objects.<br><em>Extraordinary journeys.</em></h2><p>Choose an artifact to bring its story into focus.</p></div><div class="spotlight"><div id="spotlight-preview"></div><div class="spotlight-list" aria-label="Artifact previews">${exhibits.map((e,i)=>`<button data-artifact="${i}" aria-pressed="${i===0}"><span>${e.name}</span><small>${e.world} · ${e.year}</small><b aria-hidden="true">↗</b></button>`).join('')}</div></div><div class="archive-header"><h3>Through the archive</h3><div><button id="archive-prev" aria-label="Previous archive images">←</button><button id="archive-next" aria-label="Next archive images">→</button></div></div><div class="archive-rail" tabindex="0" aria-label="Scrollable NASA image gallery">${exhibits.map(e=>`<a href="#exhibit/${e.id}"><img src="images/${e.image || e.id}.jpg" alt="${e.image ? e.evidence : e.name+', NASA archive'}" loading="lazy"><span>${e.name} ↗</span></a>`).join('')}</div><p class="caption">NASA archival imagery · Individual image credits and scientific sources in each exhibit.</p>`;
   after.after(gallery);
   function select(index) {
     const e=exhibits[index];
     const preview=gallery.querySelector('#spotlight-preview');
-    preview.innerHTML=`<img src="images/${e.id}.jpg" alt="${e.name}, NASA archive"><div><p class="eyebrow">${e.mission}</p><h3>${e.hook}</h3><p>${e.status} · ${e.place}</p><a class="button" href="#exhibit/${e.id}">Enter the exhibit →</a></div>`;
+    preview.innerHTML=`<img src="images/${e.image || e.id}.jpg" alt="${e.image ? e.evidence : e.name+', NASA archive'}"><div><p class="eyebrow">${e.mission}</p><h3>${e.hook}</h3><p>${e.status} · ${e.place}</p><a class="button" href="#exhibit/${e.id}">Enter the exhibit →</a></div>`;
     gallery.querySelectorAll('[data-artifact]').forEach((button,i)=>button.setAttribute('aria-pressed',String(i===index)));
     if(!motionPreference.matches) preview.animate([{opacity:.35},{opacity:1}],{duration:400});
   }
