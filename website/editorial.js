@@ -10,7 +10,7 @@ function installEditorial() {
   moonTitle.textContent = 'Your next discovery is on the surface.';
   oldTitle.replaceWith(moonTitle);
   moonSection.querySelector('.eyebrow').textContent = 'Explore the Moon';
-  moonSection.querySelector('.lead').textContent = 'Turn a distant world into a place you can explore. Discover an ancient impact basin or visit Tranquility Base.';
+  moonSection.querySelector('.lead').textContent = 'Drag the globe, discover landing sites, visit a far-side explorer, or find a crater. Every marker connects a place with a story.';
 
   const scenes = [
     {id:'backshell',tag:'Mars · Jezero Crater',title:'Built for a moment.',emphasis:'Remembered for a lifetime.',text:'A parachute on red sand. A landing that opened a new chapter. Explore the hardware that made the journey possible.'},

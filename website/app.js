@@ -83,6 +83,8 @@ function applyMuseumAction() {
   if(action.tool==='collection') {
     if(['Moon','Mars','All'].includes(action.world))filter=action.world;
     query='';collection();ensurePageHeading();
+  } else if(action.tool==='moon') {
+    const globe=main.querySelector('.lunar-globe');globe?.scrollIntoView({behavior:motionPreference.matches?'instant':'smooth',block:'start'});globe?.querySelector('canvas')?.focus({preventScroll:true});
   } else if(action.tool==='terrain') {
     const lesson=main.querySelector('.terrain-lesson');if(lesson){lesson.open=true;lesson.scrollIntoView({behavior:motionPreference.matches?'instant':'smooth',block:'start'});lesson.querySelector('summary')?.focus({preventScroll:true});}
   } else if(action.tool==='atlas') {
@@ -97,7 +99,7 @@ function applyMuseumAction() {
 }
 addEventListener('museum-action',event=>{
   const action=event.detail;
-  if(!action||!['collection','atlas','compare','science','archive','terrain'].includes(action.tool))return;
+  if(!action||!['collection','atlas','compare','science','archive','terrain','moon'].includes(action.tool))return;
   pendingMuseumAction={tool:action.tool,world:action.world};
   const route=action.tool==='collection'?'#collection':['atlas','terrain'].includes(action.tool)?'#atlas':'#home';
   if(location.hash===route || (!location.hash && route==='#home'))applyMuseumAction();

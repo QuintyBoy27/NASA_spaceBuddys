@@ -42,27 +42,9 @@ function enhanceMuseum() {
 }
 
 function installMoonExplorer() {
-  const hero = main.querySelector('.hero');
-  if (!hero) return;
-  hero.querySelector(':scope > img')?.remove();
-  const explorer = document.createElement('div');
-  explorer.className = 'moon-explorer';
-  explorer.innerHTML = `<div class="moon-orbit"><button class="moon-disc" aria-label="Explore the Moon’s giant impact basin"><img src="images/moon.jpg" alt="NASA Clementine near-side mosaic, artistically rotated"></button></div><div class="moon-controls"><button data-moon="impact">◉ Giant impact basin</button><button data-moon="apollo">⌖ Apollo 11 landing site</button><button id="moon-pause" aria-pressed="false">Pause rotation</button></div><p class="caption">Click the Moon to explore · Illustrated navigation<br>Near-side mosaic · NASA/JPL/USGS · Rotation is a visual effect</p>`;
-  hero.append(explorer);
-  const disc = explorer.querySelector('.moon-disc');
-  const pause = explorer.querySelector('#moon-pause');
-  let paused = motionPreference.matches;
-  const update = () => {
-    disc.classList.toggle('paused', paused);
-    pause.textContent = paused ? 'Resume rotation' : 'Pause rotation';
-    pause.setAttribute('aria-pressed', String(paused));
-  };
-  update();
-  pause.onclick = () => { paused = !paused; update(); };
-  disc.onclick = () => { paused = true; update(); openMoonStory('impact'); };
-  explorer.querySelectorAll('[data-moon]').forEach(button => {
-    button.onclick = () => { paused = true; update(); openMoonStory(button.dataset.moon); };
-  });
+  stopMoonGlobe();
+  const hero=main.querySelector('.hero');
+  if(hero)mountMoonGlobe(hero);
 }
 
 function openMoonStory(topic) {

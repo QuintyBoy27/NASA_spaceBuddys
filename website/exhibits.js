@@ -1786,3 +1786,6 @@ museumKnowledge.push(...[
     ]
   }
 ]);
+
+// Globe navigation explains the distinction from the schematic surface atlas.
+museumKnowledge.push({id:'moon-globe',keywords:['moon globe','rotating moon','lunar globe','google earth moon'],answer:'The homepage Moon globe uses a NASA global mosaic on a sphere. Drag it, use the arrow keys, or choose a site to center its coordinates. Zoom buttons and near-side/far-side presets help exploration. Pins are enlarged and some represent landing regions rather than exact nearby hardware. It is an educational globe, not live imagery, surface-level tiles or a navigation system.',source:'https://svs.gsfc.nasa.gov/4720/',related:['eagle','surveyor','rover','alsep']});
