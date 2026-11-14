@@ -1,0 +1,79 @@
+AFTER THE MISSION
+A Moon and Mars museum for NASA Space Apps 2026
+
+OPEN YOUR WEBSITE
+1. If you downloaded the ZIP, right-click it and choose Extract All.
+2. Open the extracted after-the-mission folder.
+3. Open website, then double-click index.html.
+4. Your browser opens the museum. Keep all files together.
+No installation, account, API key, or terminal is needed.
+NASA links and optional Google fonts require internet access.
+
+WHAT TO TRY
+Enter the museum. Search for a mission or switch between Moon and Mars.
+Open an exhibit and inspect its original image. Download a field note.
+Explore the timeline and complete the three-question field challenge.
+Visited exhibits are remembered when your browser permits local storage.
+Field notes save in your browser when local storage is available. Download a copy to share or preserve them.
+
+EDIT WITH CHATGPT
+In this chat, describe the change you want. For example,
+“Make the museum warmer and add a guided tour for younger visitors.”
+In a new chat, attach the ZIP and say,
+“This is our NASA Space Apps museum. Please edit the actual project,
+preserve the NASA citations, and return a new runnable ZIP.”
+
+EDIT YOURSELF
+Make a backup of the folder first.
+Right-click a file and choose Open with > Notepad.
+website/exhibits.js contains the six exhibit records.
+website/style.css controls colors, fonts, spacing, and mobile layout.
+website/app.js contains page layouts and interactions.
+website/index.html contains the title and navigation.
+Save your changes, then refresh the browser.
+When changing exhibit text, preserve quotation marks and commas.
+Keep sources with facts. Add only artifacts verified in mission records.
+
+SHARING
+Send the entire ZIP to Quint. Each of you can extract and open it.
+Choose one person to combine edits into the final folder.
+The website directory is ready for static web hosting.
+No hosted URL was created because the Sites creation tool was unavailable.
+
+RESEARCH AND CREDITS
+The Sources page links every exhibit to NASA records.
+The official 2026 challenge title was found in the Space Apps index.
+The full official challenge page returned an error during research.
+Detailed objectives were checked against the HackAthlone local-event copy.
+Both links appear in the Sources page. Recheck the official brief before submission.
+The Apollo 15 photograph is an orbital context image of the landing region.
+Its credit is NASA/GSFC/Arizona State University.
+The Moon mosaic is PIA00302, NASA/JPL/USGS.
+The unused Mars globe image is NASA/JPL-Caltech.
+Other image credits appear beside the exhibits.
+This is an independent educational project. Credit NASA imagery and data
+and describe AI assistance according to your event's submission requirements.
+
+VERIFICATION
+JavaScript syntax checks passed. Downloaded image signatures were checked.
+Browser interaction and visual layout verification remain pending.
+Try the navigation, search, downloads, and challenge on your own browser
+before presenting. The project uses responsive layouts and keyboard-accessible
+native links and buttons.
+
+DISCOVERY UPDATE
+On the landing page, scroll to The discovery room. Drag the time slider,
+compare two artifacts, or choose an unseen exhibit. Motion honors reduced-motion
+preferences, and offscreen Moon rotation pauses. discovery.js and discovery.css
+contain these new tools. Browser performance has not been measured.
+
+
+EDITORIAL DESIGN UPDATE
+The opening has three selectable stories and optional playback.
+Select an artifact in Inside the collection to change the large preview.
+Swipe the archive strip or use its arrows. The Moon and Discovery Room
+remain below the opening. editorial.js and editorial.css contain this design.
+Inspired by Roarington's image-led storytelling and experience navigation.
+All exhibit images remain the project's credited NASA imagery.
+Local preview started successfully, but the in-app browser connection timed out.
+
