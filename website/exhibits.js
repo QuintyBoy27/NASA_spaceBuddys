@@ -1577,3 +1577,212 @@ const museumKnowledge = [
     ]
   }
 ];
+
+// CSA supplemental research; no planetary observations inferred from Earth metadata.
+const csaResources = [
+  {
+    "title": "Alouette_ISIS_extract",
+    "url": "https://github.com/asc-csa/Alouette_ISIS_extract",
+    "revision": "9545f973df4053ea519b971dea09debf62ff93bf",
+    "summary": "Extraction tools, dictionaries, example graphics and a small reception-facility CSV accompany the ionogram recovery project. Bulk scans and derived measurements are accessed separately.",
+    "license": "Modified MIT-style CSA license; retain copyright/permission notice and respect the non-endorsement clause.",
+    "licenseURL": "https://github.com/asc-csa/Alouette_ISIS_extract/blob/9545f973df4053ea519b971dea09debf62ff93bf/LICENSE",
+    "use": "Small reception-facility metadata table reused locally."
+  },
+  {
+    "title": "Canadian-Planetary-Emulation-Terrain-3D-Mapping-Tutorial",
+    "url": "https://github.com/asc-csa/Canadian-Planetary-Emulation-Terrain-3D-Mapping-Tutorial",
+    "revision": "2b9be58a16501df65f2c9ad3ed0448daff335a7e",
+    "summary": "The notebook reads external XYZ laser scans and sensor-pose files, transforms scans into a common frame, reduces density and removes outliers. The repository does not bundle the 102-scan dataset.",
+    "license": "Modified MIT-style CSA license; retain copyright/permission notice and respect the non-endorsement clause.",
+    "licenseURL": "https://github.com/asc-csa/Canadian-Planetary-Emulation-Terrain-3D-Mapping-Tutorial/blob/2b9be58a16501df65f2c9ad3ed0448daff335a7e/LICENSE.txt",
+    "use": "Point-cloud processing concepts explained with independently written synthetic illustration."
+  },
+  {
+    "title": "NEOSSAT_Tutorial",
+    "url": "https://github.com/asc-csa/NEOSSAT_Tutorial",
+    "revision": "6b436857b747458dfa81e98fb7ecc6f07e648f23",
+    "summary": "Notebooks query external CSA/CADC archives and display FITS observations. The repository contains tutorial outputs and a spacecraft image, not a complete telescope archive.",
+    "license": "Modified MIT-style CSA license; retain copyright/permission notice and respect the non-endorsement clause.",
+    "licenseURL": "https://github.com/asc-csa/NEOSSAT_Tutorial/blob/6b436857b747458dfa81e98fb7ecc6f07e648f23/LICENSE.txt",
+    "use": "FITS metadata and display-stretch concepts inform archive-reading guidance; no FITS files imported."
+  },
+  {
+    "title": "EO-Visualization-and-Search-Tutorial",
+    "url": "https://github.com/asc-csa/EO-Visualization-and-Search-Tutorial",
+    "revision": "5deda75ed57131fed2f8936a5ed04c0b5f9f49a6",
+    "summary": "Notebooks search external EODMS imagery by area and time and display image footprints/overlays. Credentials or permissions may be needed for some archive requests; Earth SAR imagery is not a Mars map.",
+    "license": "Modified MIT-style CSA license; retain copyright/permission notice and respect the non-endorsement clause.",
+    "licenseURL": "https://github.com/asc-csa/EO-Visualization-and-Search-Tutorial/blob/5deda75ed57131fed2f8936a5ed04c0b5f9f49a6/LICENSE.txt",
+    "use": "Area/time filtering and provenance principles inform atlas filters; no RADARSAT images or API connections imported."
+  }
+];
+const csaReceptionFacilities = [
+  {
+    "alouette": "Resolute Bay, NT, Canada",
+    "isis": "Resolute Bay, Canada"
+  },
+  {
+    "alouette": "Blossom Point, MD, USA",
+    "isis": "Blossom Point, Maryland"
+  },
+  {
+    "alouette": "Falkland Islands (Islas Malvinas)",
+    "isis": "Falkland Island, UK"
+  },
+  {
+    "alouette": "St. John's, Newfoundland",
+    "isis": "St Johns, Newfoundland"
+  },
+  {
+    "alouette": "Orroral Valley, Australia",
+    "isis": "Orroral, Australia"
+  },
+  {
+    "alouette": "Prince Albert, SK, Canada",
+    "isis": "Prince Albert, Canada"
+  },
+  {
+    "alouette": "Ottawa, Canada",
+    "isis": "Ottawa, Canada"
+  },
+  {
+    "alouette": "Byrd Station, Antarctica",
+    "isis": "Byrd Station, Antartica"
+  },
+  {
+    "alouette": "Las Palmas, Canary Islands, Spain",
+    "isis": "Las Palmas, Canary Islands, Spain"
+  },
+  {
+    "alouette": "Winkfield, England, UK",
+    "isis": "Winkfield, UK"
+  },
+  {
+    "alouette": "Fort Myers, FL, USA",
+    "isis": "Fort Myers, Florida"
+  },
+  {
+    "alouette": "East Grant Forks, MN, USA",
+    "isis": "East Grand Forks, Minnesota"
+  },
+  {
+    "alouette": "Rosman, NC, USA",
+    "isis": "Rosman, North Carolina"
+  },
+  {
+    "alouette": "College, Fairbanks, AK, USA",
+    "isis": "College, Alaska"
+  },
+  {
+    "alouette": "University of Alaska, Fairbanks, AK, USA",
+    "isis": "Fairbanks, Alaska"
+  },
+  {
+    "alouette": "Woomera, Australia",
+    "isis": "Woomera, Australia"
+  },
+  {
+    "alouette": "Tromso, Norway",
+    "isis": "Tromso, Norway"
+  },
+  {
+    "alouette": "Darwin, Australia",
+    "isis": "Darwin, Australia"
+  },
+  {
+    "alouette": "Quito, Ecuador",
+    "isis": "Quito, Ecuador"
+  },
+  {
+    "alouette": "South Point, HI, USA",
+    "isis": "South Point, Hawaiian Island "
+  },
+  {
+    "alouette": "Lima, Peru",
+    "isis": "Lima, Peru"
+  },
+  {
+    "alouette": "Johannesburg, South Africa",
+    "isis": "Johannesburg, South Africa"
+  },
+  {
+    "alouette": "Kano, Nigeria",
+    "isis": "Kano, Nigeria"
+  },
+  {
+    "alouette": "Bretigny, France",
+    "isis": "Bretigny, France"
+  },
+  {
+    "alouette": "Singapore",
+    "isis": "Singapore, Malaysia"
+  },
+  {
+    "alouette": "Boulder, CO, USA",
+    "isis": "Boulder, Colorado"
+  },
+  {
+    "alouette": "Kauai, HI, USA",
+    "isis": "Kauai, Hawaii"
+  },
+  {
+    "alouette": "Kashima, Japan",
+    "isis": "Kashima, Japan"
+  }
+];
+museumKnowledge.push(...[
+  {
+    "id": "csa-terrain",
+    "keywords": [
+      "point cloud",
+      "point clouds",
+      "terrain tutorial",
+      "canadian terrain",
+      "analogue terrain",
+      "csa terrain"
+    ],
+    "answer": "A point cloud represents a surface with many three-dimensional samples. The CSA terrain tutorial aligns laser scans using sensor poses, downsamples and removes outliers. Its real dataset is an Earth-based planetary analogue, not the Moon or Mars. The museum atlas contains a small synthetic teaching demonstration of these ideas, not measured CSA terrain.",
+    "source": "https://github.com/asc-csa/Canadian-Planetary-Emulation-Terrain-3D-Mapping-Tutorial",
+    "related": [
+      "rover",
+      "pathfinder"
+    ]
+  },
+  {
+    "id": "csa-archive",
+    "keywords": [
+      "alouette",
+      "isis",
+      "ionogram",
+      "ionograms",
+      "canadian archive",
+      "reception facilities"
+    ],
+    "answer": "The CSA Alouette/ISIS project recovers information from scanned ionograms: records of radio echoes used to study Earth’s ionosphere. The museum’s Data afterlife tool lets you search a real repository table of reception-facility labels. These labels are metadata, not ionogram measurements, spacecraft positions or evidence of lunar or Martian terrain.",
+    "source": "https://github.com/asc-csa/Alouette_ISIS_extract",
+    "related": [
+      "alsep",
+      "insight"
+    ]
+  },
+  {
+    "id": "csa-neossat",
+    "keywords": [
+      "neossat",
+      "fits",
+      "radarsat",
+      "eodms",
+      "canadian space agency",
+      "csa resources"
+    ],
+    "answer": "CSA’s NEOSSAT tutorial works with telescope FITS files from external archives, while its Earth-observation tutorial searches RADARSAT imagery through EODMS. They teach provenance, metadata and careful visualization. The museum does not ingest these telescope or Earth-radar datasets; NASA remains the foundation of its ten surface exhibits.",
+    "source": "https://github.com/asc-csa/NEOSSAT_Tutorial",
+    "sources": [
+      "https://github.com/asc-csa/EO-Visualization-and-Search-Tutorial"
+    ],
+    "related": [
+      "insight"
+    ]
+  }
+]);
