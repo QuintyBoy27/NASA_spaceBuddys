@@ -140,6 +140,7 @@
     return remember({...result,subjectIds:[record.id]});
   }
   function builtInAnswer(question) {
+    question=window.MuseumI18n?.guideQuestion(question)||question;
     const {q,corrections}=interpretSpelling(question);
     const empty={text:'',sources:[],actions:[]};
     const present=result=>corrections.length?{...result,text:'I interpreted that as '+corrections.join(', ')+'. '+result.text}:result;
