@@ -7,7 +7,7 @@ function installDiscoveries() {
   if (!hero) return;
   const section = document.createElement('section');
   section.className = 'discovery';
-  section.innerHTML = `<div class="eyebrow">The discovery room</div><h2>Follow the hardware.<br>Find the connection.</h2><p>Travel through the collection, compare two objects, or let the museum choose your next discovery.</p><div class="discovery-tabs" role="tablist" aria-label="Discovery tools"><button role="tab" id="tab-time" aria-controls="discovery-content" aria-selected="true" tabindex="0">Time explorer</button><button role="tab" id="tab-compare" aria-controls="discovery-content" aria-selected="false" tabindex="-1">Compare artifacts</button></div><div id="discovery-content" role="tabpanel" aria-labelledby="tab-time"></div><div class="discovery-bottom"><button id="surprise">Choose my next discovery ↗</button><span>Every destination opens a NASA-backed exhibit.</span></div>`;
+  section.innerHTML = `<div class="eyebrow">The discovery room</div><h2>Follow the hardware.<br>Find the connection.</h2><p>Travel through the collection, compare two objects, or let the museum choose your next discovery.</p><div class="discovery-tabs" role="tablist" aria-label="Discovery tools"><button role="tab" id="tab-time" aria-controls="discovery-content" aria-selected="true" tabindex="0">Time explorer</button><button role="tab" id="tab-compare" aria-controls="discovery-content" aria-selected="false" tabindex="-1">Compare artifacts</button><button role="tab" id="tab-lab" aria-controls="discovery-content" aria-selected="false" tabindex="-1">Science in motion</button></div><div id="discovery-content" role="tabpanel" aria-labelledby="tab-time"></div><div class="discovery-bottom"><button id="surprise">Choose my next discovery ↗</button><span>Every destination opens a NASA-backed exhibit.</span></div>`;
   hero.after(section);
   const tabs = [...section.querySelectorAll('[role=tab]')];
   function selectTab(tab) {
@@ -15,14 +15,15 @@ function installDiscoveries() {
     const content = section.querySelector('#discovery-content');
     content.setAttribute('aria-labelledby', tab.id);
     if (tab.id === 'tab-time') installTimeExplorer(content);
-    else installComparison(content);
+    else if(tab.id === 'tab-compare') installComparison(content);
+    else installScienceLab(content);
   }
   tabs.forEach((tab,index) => {
     tab.onclick = () => selectTab(tab);
     tab.onkeydown = event => {
       if (!['ArrowLeft','ArrowRight','Home','End'].includes(event.key)) return;
       event.preventDefault();
-      const next = event.key === 'Home' ? tabs[0] : event.key === 'End' ? tabs.at(-1) : tabs[1-index];
+      const next = event.key === 'Home' ? tabs[0] : event.key === 'End' ? tabs.at(-1) : tabs[(index+(event.key==='ArrowRight'?1:tabs.length-1))%tabs.length];
       next.focus(); selectTab(next);
     };
   });
@@ -89,4 +90,34 @@ function installNotebook() {
       if (!savedMessage) { status.textContent = 'Saved in this browser. You can also download a copy.'; savedMessage = true; }
     } catch { status.textContent = 'Browser storage is unavailable. Download your note to keep it.'; }
   };
+}
+
+// Interactive explanatory diagrams. These are illustrations, not telemetry.
+function installScienceLab(container) {
+  const experiments = [
+    {title:'Bounce into a new era',tag:'Pathfinder / landing engineering',id:'pathfinder',kind:'bounce',steps:['Protected descent','Cushioned impact','Ready to explore'],text:['A parachute slowed the spacecraft before airbag-protected touchdown.','Inflated airbags cushioned repeated bounces. This diagram simplifies the real trajectory.','Once settled, the lander opened and Sojourner could explore nearby rocks.']},
+    {title:'Listen below the surface',tag:'InSight / planetary interiors',id:'insight',kind:'seismic',steps:['A disturbance','Waves travel','Read the interior'],text:['A quake or impact sends vibrations through the planet.','Wave paths and speeds depend on the materials they travel through. The rings here are schematic.','Scientists interpret seismic measurements to investigate internal structure. This is not a recorded marsquake.']},
+    {title:'Five planned. Seventy-two flown.',tag:'Ingenuity / technology to exploration',id:'ingenuity',kind:'flight',steps:['Demonstrate','Keep exploring','A lasting legacy'],text:['Ingenuity was planned for no more than five test flights.','It continued flying and helped scout terrain for the rover team.','It completed 72 flights before rotor damage ended flying operations in January 2024.']}
+  ];
+  container.innerHTML=`<div class="lab-selector" role="group" aria-label="Choose a science story">${experiments.map((e,i)=>`<button data-experiment="${i}" aria-pressed="${i===0}">${e.id==='pathfinder'?'Airbag landing':e.id==='insight'?'Inside Mars':'Beyond the plan'}</button>`).join('')}</div><div class="science-lab"><div class="lab-visual" aria-hidden="true"><div class="lab-orbit"></div><div class="lab-wave wave-one"></div><div class="lab-wave wave-two"></div><div class="lab-machine"><span></span></div><div class="lab-ground"></div><div class="lab-scan"></div></div><div class="lab-copy"><div class="eyebrow" id="lab-tag"></div><h3 id="lab-title"></h3><div class="lab-steps" role="group" aria-label="Story stage"></div><p id="lab-explanation" aria-live="polite"></p><a class="button" id="lab-link">Open the mission exhibit ↗</a><p class="caption">Interactive illustration · Motion, scale and timing simplified · No live NASA telemetry</p></div></div>`;
+  let selected=0;
+  function stage(index) {
+    const experiment=experiments[selected];
+    const visual=container.querySelector('.lab-visual');
+    visual.dataset.kind=experiment.kind;visual.dataset.stage=String(index);
+    container.querySelector('#lab-explanation').textContent=experiment.text[index];
+    container.querySelectorAll('[data-lab-stage]').forEach(button=>button.setAttribute('aria-pressed',String(Number(button.dataset.labStage)===index)));
+  }
+  function choose(index) {
+    selected=index;const e=experiments[index];
+    container.querySelector('#lab-tag').textContent=e.tag;
+    container.querySelector('#lab-title').textContent=e.title;
+    container.querySelector('#lab-link').href='#exhibit/'+e.id;
+    container.querySelector('.lab-steps').innerHTML=e.steps.map((name,i)=>`<button data-lab-stage="${i}" aria-pressed="${i===0}">${i+1} / ${name}</button>`).join('');
+    container.querySelectorAll('[data-lab-stage]').forEach(button=>button.onclick=()=>stage(Number(button.dataset.labStage)));
+    container.querySelectorAll('[data-experiment]').forEach(button=>button.setAttribute('aria-pressed',String(Number(button.dataset.experiment)===index)));
+    stage(0);
+  }
+  container.querySelectorAll('[data-experiment]').forEach(button=>button.onclick=()=>choose(Number(button.dataset.experiment)));
+  choose(0);
 }
