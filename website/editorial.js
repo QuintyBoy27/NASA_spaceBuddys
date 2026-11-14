@@ -20,11 +20,11 @@ function installEditorial() {
   const opening = document.createElement('section');
   opening.className = 'cinema';
   opening.setAttribute('aria-label','Featured museum stories');
-  opening.innerHTML = `<div class="cinema-images" aria-hidden="true">${scenes.map((s,i)=>`<img ${i===0?`src="images/${s.id}.jpg" fetchpriority="high"`:`data-src="images/${s.id}.jpg"`} class="${i===0?'active':''}" alt="" decoding="async">`).join('')}</div><div class="cinema-shade"></div><div class="cinema-copy"><p class="eyebrow" id="scene-tag"></p><h1><span id="scene-title"></span><em id="scene-emphasis"></em></h1><p id="scene-description"></p><a class="button primary" id="scene-link">Explore the story ↗</a></div><div class="cinema-bottom"><div class="scene-tabs" aria-label="Choose a featured story">${scenes.map((s,i)=>`<button data-scene="${i}" aria-pressed="${i===0}">${exhibits.find(e=>e.id===s.id).name}</button>`).join('')}</div><button id="scene-play" aria-pressed="false">Play stories ▷</button></div><span class="cinema-credit"></span>`;
+  opening.innerHTML = `<div class="cinema-images" aria-hidden="true">${scenes.map((s,i)=>`<img ${i===0?`src="images/${s.id}.jpg" fetchpriority="high"`:`data-src="images/${s.id}.jpg"`} class="${i===0?'active':''}" alt="" decoding="async">`).join('')}</div><div class="cinema-shade"></div><div class="cinema-copy"><p class="eyebrow" id="scene-tag"></p><h1><span id="scene-title"></span><em id="scene-emphasis"></em></h1><p id="scene-description"></p><a class="button primary" id="scene-link">Explore the story ↗</a></div><div class="cinema-bottom"><div class="scene-tabs" aria-label="Choose a featured story">${scenes.map((s,i)=>`<button data-scene="${i}" aria-pressed="${i===0}">${exhibits.find(e=>e.id===s.id).name}</button>`).join('')}</div></div><span class="cinema-credit"></span>`;
   moonSection.before(opening);
   let current = 0;
   let timer;
-  let playing = false;
+  let disposed = false;
   let visible = true;
   let copyAnimation;
   let focusTimer;
@@ -45,23 +45,19 @@ function installEditorial() {
   }
   function schedule() {
     clearInterval(timer);
-    if (opening.isConnected && playing && visible && !document.hidden && !opening.matches(':focus-within')) timer = setInterval(()=>selectScene((current+1)%scenes.length),8000);
+    if (!disposed && opening.isConnected && visible && !document.hidden && !motionPreference.matches && !opening.matches(':focus-within')) timer = setInterval(()=>selectScene((current+1)%scenes.length),8000);
   }
-  function setPlaying(value) {
-    playing=value;
-    opening.querySelector('#scene-play').textContent = playing ? 'Pause stories Ⅱ' : 'Play stories ▷';
-    opening.querySelector('#scene-play').setAttribute('aria-pressed',String(playing));
-    schedule();
-  }
-  opening.querySelectorAll('[data-scene]').forEach(button=>button.onclick=()=>{setPlaying(false);selectScene(Number(button.dataset.scene));});
-  opening.querySelector('#scene-play').onclick=()=>setPlaying(!playing);
+  opening.querySelectorAll('[data-scene]').forEach(button=>button.onclick=()=>{selectScene(Number(button.dataset.scene));schedule();});
   opening.addEventListener('focusin',()=>clearInterval(timer));
   opening.addEventListener('focusout',()=>{clearTimeout(focusTimer);focusTimer=setTimeout(schedule,0)});
   document.addEventListener('visibilitychange',schedule);
+  const motionChange=()=>{if(motionPreference.matches)copyAnimation?.cancel();schedule();};
+  motionPreference.addEventListener?.('change',motionChange);
   const observer = 'IntersectionObserver' in window ? new IntersectionObserver(entries=>{visible=entries[0].isIntersecting;schedule();}) : null;
   observer?.observe(opening);
-  stopEditorial=()=>{playing=false;clearTimeout(focusTimer);copyAnimation?.cancel();clearInterval(timer);observer?.disconnect();document.removeEventListener('visibilitychange',schedule);};
+  stopEditorial=()=>{disposed=true;clearTimeout(focusTimer);copyAnimation?.cancel();clearInterval(timer);observer?.disconnect();document.removeEventListener('visibilitychange',schedule);motionPreference.removeEventListener?.('change',motionChange);};
   selectScene(0);
+  schedule();
   installSpotlight(moonSection);
   // The archive already presents every artifact; omit the repeated card gallery.
   [...main.children].find(node=>node.querySelector('.grid'))?.remove();
