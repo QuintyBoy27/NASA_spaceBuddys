@@ -12,21 +12,36 @@
  const textSources=new WeakMap(),attributeSources=new WeakMap();
  const attributes=['aria-label','aria-valuetext','placeholder','title','alt'];
  const ignored='script,style,textarea,code,pre,[data-i18n-skip],.guide-user .guide-answer-text';
- let originals=new Map(),alternates=new Map(),patterns=[];
+ let originals=new Map(),alternates=new Map(),patterns=[],passages=[];
+ const lookupKey=value=>String(value).normalize('NFC').replace(/[\s\u00a0]+/g,' ').trim();
  const escapePattern=value=>value.replace(/[.*+?^${}()|[\]\\]/g,'\\$&');
  function compile(){
   originals=new Map();alternates=new Map();
-  for(const entry of Object.values(catalog.messages))if(typeof entry.en==='string'){originals.set(entry.source||entry.en,entry);for(const value of Object.values(entry))if(typeof value==='string')alternates.set(value,entry);}
-  patterns=Object.values(catalog.templates||{}).map(entry=>{const names=[];let cursor=0,pattern='^';for(const token of entry.en.matchAll(/\{(\w+)\}/g)){pattern+=escapePattern(entry.en.slice(cursor,token.index))+(['count','total','index','worlds','year','number'].includes(token[1])?'([0-9]+)':'(.+?)');names.push(token[1]);cursor=token.index+token[0].length;}return {entry,names,regex:new RegExp(pattern+escapePattern(entry.en.slice(cursor))+'$')};});
+  for(const entry of Object.values(catalog.messages))if(typeof entry.en==='string'){originals.set(lookupKey(entry.source||entry.en),entry);for(const value of Object.values(entry))if(typeof value==='string')alternates.set(lookupKey(value),entry);}
+  // A guide response or copied caption may contain several complete catalog
+  // paragraphs. Preserve those passages before attempting smaller fragments.
+  passages=[...alternates].filter(([text])=>text.length>=32).sort((a,b)=>b[0].length-a[0].length);
+  patterns=Object.values(catalog.templates||{}).map(entry=>{const names=[];let cursor=0,pattern='^';for(const token of entry.en.matchAll(/\{(\w+)\}/g)){pattern+=escapePattern(entry.en.slice(cursor,token.index))+(['count','total','index','worlds','year','number'].includes(token[1])?'(-?[0-9]+(?:\\.[0-9]+)?)':'(.+?)');names.push(token[1]);cursor=token.index+token[0].length;}return {entry,names,regex:new RegExp(pattern+escapePattern(entry.en.slice(cursor))+'$')};});
  }
  compile();
  function interpolate(value,params={}){return value.replace(/\{(\w+)\}/g,(token,key)=>Object.hasOwn(params,key)?String(params[key]):token);}
  function t(key,params={}){const entry=catalog.messages[key]||catalog.templates?.[key];return interpolate(entry?.[language]??entry?.en??key,params);}
  function core(value,depth=0){
-  if(depth>4||!/[A-Za-z]/.test(value)||/^https?:\/\//.test(value))return value;
-  const exact=originals.get(value)||alternates.get(value);if(exact)return exact[language]??exact.en;
-  for(const {entry,names,regex} of patterns){const match=regex.exec(value);if(match){const params=Object.fromEntries(names.map((name,i)=>[name,core(match[i+1],depth+1)]));return interpolate(entry[language]??entry.en,params);}}
-  const chunks=value.split(/(\s*[·/]\s*|\s+[—–]\s+|\s*[↗→←▷Ⅱ✦○●]\s*)/);
+  if(depth>20||!/[A-Za-z]/.test(value)||/^https?:\/\//.test(value))return value;
+  const key=lookupKey(value),exact=originals.get(key)||alternates.get(key);if(exact)return exact[language]??exact.en;
+  const writtenDate=value.match(/^(\d{1,2}) (January|February|March|April|May|June|July|August|September|October|November|December|Jan|Feb|Mar|Apr|Jun|Jul|Aug|Sept|Sep|Oct|Nov|Dec) (\d{4})$/);
+  if(writtenDate&&language!==fallback){const months=['january','february','march','april','may','june','july','august','september','october','november','december'];const month=months.findIndex(name=>name.startsWith(writtenDate[2].toLowerCase()));const parsed=new Date(Date.UTC(Number(writtenDate[3]),month,Number(writtenDate[1]),12));return parsed.toLocaleDateString(catalog.languages[language].locale,{day:'numeric',month:writtenDate[2].length>3?'long':'short',year:'numeric',timeZone:'UTC'});}
+  for(const {entry,names,regex} of patterns){const match=regex.exec(key);if(match){const params=Object.fromEntries(names.map((name,i)=>[name,core(match[i+1],depth+1)]));return interpolate(entry[language]??entry.en,params);}}
+  const lines=value.split(/(\n+)/);if(lines.length>1)return lines.map((part,i)=>i%2?part:translate(part,depth+1)).join('');
+  if(key.length>40)for(const [passage,entry] of passages){
+   const at=key.indexOf(passage);if(at<0)continue;
+   const before=key.slice(0,at),after=key.slice(at+passage.length);
+   if((/^[\p{L}\p{N}]/u.test(passage)&&/[\p{L}\p{N}]$/u.test(before))||(/[\p{L}\p{N}]$/u.test(passage)&&/^[\p{L}\p{N}]/u.test(after)))continue;
+   return translate(before,depth+1)+(entry[language]??entry.en)+translate(after,depth+1);
+  }
+  const punctuation=value.match(/^(.*?)([.!?])$/);
+  if(punctuation){const entry=originals.get(lookupKey(punctuation[1]))||alternates.get(lookupKey(punctuation[1]));if(entry)return (entry[language]??entry.en)+punctuation[2];}
+  const chunks=value.split(/(\s*[·/:]\s*|\s+[—–]\s+|\s*[↗→←▷Ⅱ✦○●]\s*)/);
   if(chunks.length>1)return chunks.map((part,i)=>i%2?part:translate(part,depth+1)).join('');
   const sentences=value.split(/(?<=[.!?])\s+(?=[A-Z])/);
   if(sentences.length>1)return sentences.map(sentence=>translate(sentence,depth+1)).join(' ');
@@ -63,9 +78,14 @@
  function setLanguage(next,{persist=true,announce=true}={}){
   if(!Object.hasOwn(catalog.languages,next))return false;
   language=next;document.documentElement.lang=next;
-  if(selector){selector.value=next;selector.setAttribute('aria-label',t('language.label'));}
+  if(selector){
+   const codes=Object.keys(catalog.languages);
+   if(selector.options.length!==codes.length||codes.some((code,i)=>selector.options[i].value!==code||selector.options[i].textContent!==catalog.languages[code].name))selector.replaceChildren(...codes.map(code=>{const option=document.createElement('option');option.value=code;option.lang=code;option.textContent=catalog.languages[code].name;return option;}));
+   selector.value=next;selector.setAttribute('aria-label',t('language.label'));
+  }
   if(persist)try{localStorage.setItem(storageKey,next);}catch{}
   refresh();
+  document.querySelector('meta[name="description"]')?.setAttribute?.('content',t('site.description'));
   if(announce&&status)status.textContent=t('language.changed',{language:catalog.languages[next].name});
   document.dispatchEvent(new CustomEvent('museum-languagechange',{detail:{language:next}}));
   return true;
@@ -76,9 +96,9 @@
   for(const node of roots)refresh(node);
  }):null;
  observer?.observe(document.documentElement,{subtree:true,childList:true,characterData:true,attributes:true,attributeFilter:attributes});
- function searchText(value){const entry=originals.get(String(value))||alternates.get(String(value));return entry?Object.keys(catalog.languages).map(code=>entry[code]||entry.en).join(' '):String(value);}
+ function searchText(value){const entry=originals.get(lookupKey(value))||alternates.get(lookupKey(value));return entry?Object.keys(catalog.languages).map(code=>entry[code]||entry.en).join(' '):String(value);}
  function guideQuestion(value){
-  const plain=String(value).trim(),entry=alternates.get(plain);let text=(entry?.source||entry?.en||plain).normalize('NFKD').replace(/[\u0300-\u036f]/g,'').toLowerCase().replace(/[^a-z0-9\s]/g,' ').replace(/\s+/g,' ').trim();
+  const plain=String(value).trim(),entry=alternates.get(lookupKey(plain));let text=(entry?.source||entry?.en||plain).normalize('NFKD').replace(/[\u0300-\u036f]/g,'').toLowerCase().replace(/[^a-z0-9\s]/g,' ').replace(/\s+/g,' ').trim();
   const terms=Object.entries(catalog.guideTerms||{}).sort((a,b)=>b[0].length-a[0].length);
   for(const [from,to] of terms)text=text.replace(new RegExp('(^|\\s)'+escapePattern(from)+'(?=\\s|$)','g'),(_,space)=>space+to);
   return text;
@@ -88,5 +108,5 @@
  setLanguage(language,{persist:false,announce:false});
  // HTTP previews read the editable JSON directly. file:// uses the checked-in
  // generated bundle because browsers restrict fetching local JSON files.
- api.ready=/^https?:$/.test(location.protocol)&&typeof fetch==='function'?fetch('locales/translations.json',{credentials:'same-origin'}).then(response=>{if(!response.ok)throw Error('Catalog unavailable');return response.json();}).then(fresh=>{if(!fresh.languages?.en||!fresh.messages)throw Error('Invalid catalog');catalog=fresh;compile();setLanguage(Object.hasOwn(catalog.languages,language)?language:fallback,{persist:false,announce:false});return true;}).catch(()=>false):Promise.resolve(true);
+ api.ready=/^https?:$/.test(location.protocol)&&typeof fetch==='function'?fetch('locales/translations.json',{credentials:'same-origin',cache:'no-cache'}).then(response=>{if(!response.ok)throw Error('Catalog unavailable');return response.json();}).then(fresh=>{if(!fresh.languages?.en||!fresh.messages)throw Error('Invalid catalog');catalog=fresh;compile();setLanguage(Object.hasOwn(catalog.languages,language)?language:fallback,{persist:false,announce:false});return true;}).catch(()=>false):Promise.resolve(true);
 })();

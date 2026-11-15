@@ -96,7 +96,11 @@ function openImageViewer(photo) {
   const image = dialog.querySelector('img');
   image.src = photo.src;
   image.alt = photo.alt;
-  dialog.querySelector('.caption').textContent = photo.parentElement.querySelector('.caption').textContent;
+  // Retain the caption's line boundaries when moving it into the viewer.
+  // textContent alone joins words on opposite sides of a <br> together.
+  const caption=photo.parentElement.querySelector('.caption').cloneNode(true);
+  caption.querySelectorAll('br').forEach(line=>line.replaceWith(document.createTextNode('\n')));
+  dialog.querySelector('.caption').textContent = caption.textContent;
   const stage = dialog.querySelector('.viewer-stage');
   const zoom = dialog.querySelector('input');
   zoom.oninput = () => {
